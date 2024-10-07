@@ -15,11 +15,8 @@ class StudentAttendances extends Component
     use LivewireAlert, WithPagination, WithoutUrlPagination;
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['scannerDetection'];
+    public $tabActive = true;
     public $perPage = 10;
-
-    public function attendances() {
-        return StudentAttendance::orderByDesc('created_at')->paginate($this->perPage);
-    }
 
     public function scannerDetection($barcode) {
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
@@ -47,6 +44,10 @@ class StudentAttendances extends Component
         }
 
         $this->dispatch('run_rerender_js');
+    }
+
+    public function attendances() {
+        return StudentAttendance::orderByDesc('created_at')->paginate($this->perPage);
     }
 
     public function render()

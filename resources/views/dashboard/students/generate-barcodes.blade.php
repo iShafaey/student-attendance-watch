@@ -2,9 +2,6 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <h4 class="mb-4">لوحة التحكم</h4>
-        </div>
         @include('dashboard.layouts.sidebar')
         <div class="col-md-8">
             <div class="card">

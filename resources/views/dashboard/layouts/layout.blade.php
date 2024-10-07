@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AC</title>
+    <title>{{ env('APP_TITLE') }}</title>
     <link rel="stylesheet" href="{{ asset('layouts/dashboard/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('layouts/dashboard/dataTables.bootstrap5.css') }}">
     <script src="{{ asset('layouts/dashboard/jquery-3.7.1.js') }}"></script>
@@ -28,9 +28,9 @@
 
 <footer>
     <div class="container">
-        <p class="m-0 text-muted">Copyright © Montju Central {{ date('Y') }} | Made with
+        <p class="m-0 text-muted">Copyright © Student Attendance Watch {{ date('Y') }} | Made with
             <i class="text-danger h5">♥</i> by
-            <a class="text-dark" target="_blank" href="https://montju.com/">Montju</a>
+            <a class="text-dark" target="_blank" href="https://github.com/iShafaey">Ahmed Elshafie</a>
         </p>
     </div>
 </footer>
@@ -39,8 +39,6 @@
 <script src="{{ asset('layouts/dashboard/dataTables.bootstrap5.js') }}" defer></script>
 <script src="{{ asset('layouts/dashboard/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('layouts/dashboard/sweetalert2@11.js') }}"></script>
-
-@stack('script')
 
 <script>
     function beep() {
@@ -57,5 +55,7 @@
 @livewireScripts
 @include('sweetalert::alert')
 <x-livewire-alert::scripts />
+
+@stack('script')
 </body>
 </html>
