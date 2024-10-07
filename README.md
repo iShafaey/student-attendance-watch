@@ -78,7 +78,7 @@ User-friendly interface for adding student data, including:
 
 Log in via WhatsApp Web to complete setup, then test the system.
 
-### Api Respoinse
+## Api Respoinse
 - get-numbers
 
 ```json
