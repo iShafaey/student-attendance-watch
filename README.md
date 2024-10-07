@@ -45,6 +45,7 @@ User-friendly interface for adding student data, including:
 - **PHP:** Version >= 8.2
 - **Python:** Version >= 3.6
 - **Chrome Headless:** Installed automatically by the program.
+- **Barcode Scanner:** Any Barcode Scanner.
 
 ## Installation Guide
 
@@ -76,6 +77,31 @@ User-friendly interface for adding student data, including:
 ### WhatsApp Web Login
 
 Log in via WhatsApp Web to complete setup, then test the system.
+
+### Api Respoinse
+- get-numbers
+
+```json
+   {
+    "message": "نود ان نبلغكم بإن تم حضور الطالب {name} اليوم الي الحصه.",
+    "delay_min": "60",
+    "delay_max": "80",
+    "contacts": [
+            {
+                "phone_number": "+20100000000",
+                "name": "محمد"
+            },
+        ]
+    }
+   ```
+
+- update-status
+
+```json
+   {
+    "status": "success"
+   }
+   ```
 
 ## License
 
