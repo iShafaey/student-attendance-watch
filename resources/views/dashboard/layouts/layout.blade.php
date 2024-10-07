@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ env('APP_TITLE') }}</title>
+    <title>{{ env('APP_TITLE', 'Student Attendance Watch') }}</title>
     <link rel="stylesheet" href="{{ asset('layouts/dashboard/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('layouts/dashboard/dataTables.bootstrap5.css') }}">
     <script src="{{ asset('layouts/dashboard/jquery-3.7.1.js') }}"></script>
