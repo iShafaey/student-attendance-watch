@@ -57,7 +57,7 @@ def send_whatsapp_message(phone_number, message):
         print(f"Failed to send message to {phone_number}: {e}")
         return False
 
-# Infinite loop to query every 20 seconds
+# Infinite loop to query every 60 seconds
 while True:
     try:
         # Query the numbers from the API
