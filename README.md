@@ -1,5 +1,7 @@
 # Student Attendance Watch
 
+![alt text](https://github.com/iShafaey/student-attendance-watch/blob/main/public/student-attendance-watch.png?raw=true)
+
 ## Overview
 
 **Name:** Student Attendance Watch  
