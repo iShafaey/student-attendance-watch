@@ -105,4 +105,4 @@ Log in via WhatsApp Web to complete setup, then test the system.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Student Attendance Watch is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
