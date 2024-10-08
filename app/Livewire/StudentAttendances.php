@@ -24,6 +24,7 @@ class StudentAttendances extends Component
         try {
             $student = Student::whereStudentCode($barcode)->firstOrFail();
 //            $student = Student::inRandomOrder()->first();
+
             StudentAttendance::create([
                 'student_id' => $student->id,
                 'phone_number' => $student->country_code . $student->phone_number,
