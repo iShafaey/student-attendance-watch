@@ -145,11 +145,21 @@
                                 <input type="number" step="0.01" class="form-control" id="_fees" name="fees" required>
                             </div>
                         </form>
+                        <form id="delete_current_student" method="post" action="{{ route('student.delete') }}">
+                            @csrf
+                            <input type="hidden" name="id" id="_sid">
+                        </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
-                        <button onclick="$('#update_current_student').submit();" type="button" class="btn btn-primary">
-                            حفظ البيانات
+                    <div class="modal-footer"></div>
+                    <div class="d-flex justify-content-between m-3">
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+                            <button onclick="$('#update_current_student').submit();" type="button" class="btn btn-primary me-2">
+                                حفظ البيانات
+                            </button>
+                        </div>
+                        <button onclick="$('#delete_current_student').submit();" type="button" class="btn btn-danger">
+                            حذف الطالب
                         </button>
                     </div>
                 </div>
@@ -195,6 +205,7 @@
                 var data = table.row(this).data();
 
                 $('#student_id').val(data.id);
+                $('#_sid').val(data.id);
                 $('#_student_code').val(data.student_code);
                 $('#_student_name').val(data.student_name);
                 $('#_father_name').val(data.father_name);

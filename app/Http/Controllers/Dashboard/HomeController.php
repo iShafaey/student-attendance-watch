@@ -196,7 +196,7 @@ class HomeController extends Controller {
             ...$students_list
         ];
 
-        $filename = 'students_' . Str::random(10) . '.csv';
+        $filename = 'students_list' . '.csv';
         $filePath = 'exports/' . $filename;
 
         $handle = fopen(public_path('downloads/' . $filePath), 'w');
@@ -209,10 +209,16 @@ class HomeController extends Controller {
 
         fclose($handle);
 
-        return response()->file(public_path('downloads/' . $filePath), [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ])->deleteFileAfterSend(true);
+        $directoryPath = public_path('\\downloads\\exports\\');
+
+        exec("start explorer \"$directoryPath\"");
+
+        return redirect()->back()->with('success', 'تم تصدير الملف بنجاح');
+
+//        return response()->file(public_path('downloads/' . $filePath), [
+//            'Content-Type' => 'text/csv',
+//            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+//        ])->deleteFileAfterSend(true);
 //        return response()->download(public_path('downloads/' . $filePath))->deleteFileAfterSend(true);
     }
 
@@ -275,5 +281,10 @@ class HomeController extends Controller {
         ]);
 
         return redirect()->back()->with('success', 'تم حفظ المادة بنجاح');
+    }
+
+    public function deleteStudent(Request $request) {
+        Student::find($request->id)->delete();
+        return redirect()->back()->with('success', 'تم حذف الطالب بنجاح');
     }
 }
