@@ -12,7 +12,7 @@
                     <div class="float-start">
                         <div class="btn-group" role="group" aria-label="Basic example" dir="ltr">
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new_student">اضف طالب جديد</button>
-                            <a href="{{ route('students.export') }}" class="btn btn-success">تصدير بيانات الطلاب ك اكسل</a>
+                            <a href="{{ route('students.export') }}" class="btn btn-success" data-turbo="false" target="_self">تصدير بيانات الطلاب ك اكسل</a>
                         </div>
                     </div>
                 </div>

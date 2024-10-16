@@ -9,6 +9,8 @@ use App\Models\StudentRecord;
 use App\Models\StudentSubject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 use function Symfony\Component\Translation\t;
 
@@ -177,38 +179,41 @@ class HomeController extends Controller {
     }
 
     public function studentExport() {
-        $students = Student::select(['student_code', 'student_name', 'father_name', 'class', 'join_date'])->get()->toArray();
+        $students = Student::select(['student_code', 'student_name', 'father_name', 'class', 'join_date'])->get();
         $students_list = collect($students)->map(function ($student) {
             return [
-                'student_code' => $student['student_code'],
-                'student_name' => $student['student_name'] . ' ' . $student['father_name'],
-                'class' => $student['class'],
-                'join_date' => $student['join_date'],
+                'student_code' => $student->student_code,
+                'student_name' => $student->student_name,
+                'father_name' => $student->father_name,
+                'class' => $student->class,
+                'class_name' => $student?->student_class?->title ?? "[غير موجود]",
+                'join_date' => $student->join_date,
             ];
         })->toArray();
 
         $data = [
-            ['كود الطالب', 'اسم الطالب', 'الصف', 'تاريخ الانضمام'],
+            ['كود الطالب', 'اسم الطالب', 'اسم الأب', 'الصف', 'تاريخ الانضمام'],
             ...$students_list
         ];
 
-        $filename = 'students.xls';
+        $filename = 'students_' . Str::random(10) . '.csv';
+        $filePath = 'exports/' . $filename;
 
-        header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Pragma: no-cache');
-        header('Expires: 0');
+        $handle = fopen(public_path('downloads/' . $filePath), 'w');
 
-        $output = fopen('php://output', 'w');
-
-        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+        fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         foreach ($data as $row) {
-            fputcsv($output, $row);
+            fputcsv($handle, $row);
         }
 
-        fclose($output);
-        exit;
+        fclose($handle);
+
+        return response()->file(public_path('downloads/' . $filePath), [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ])->deleteFileAfterSend(true);
+//        return response()->download(public_path('downloads/' . $filePath))->deleteFileAfterSend(true);
     }
 
     public function newClass(Request $request) {

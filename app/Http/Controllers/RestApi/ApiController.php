@@ -7,6 +7,7 @@ use App\Http\Resources\StudentAttendanceResource;
 use App\Models\StudentAttendance;
 use App\Models\StudentRecord;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 class ApiController extends Controller
@@ -40,6 +41,7 @@ class ApiController extends Controller
 
         if ($datetimeField) {
             $studentRecord = StudentRecord::wherePhoneNumber($request->phone_number)
+                ->whereStatus('pending')
                 ->whereNotNull($datetimeField)
                 ->first();
 
