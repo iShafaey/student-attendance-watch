@@ -32,8 +32,8 @@ api_url = 'http://127.0.0.1:8000/api/v1.0/attendances/students/get-numbers'
 update_api_url = 'http://127.0.0.1:8000/api/v1.0/attendances/students/update-status'
 
 # Function to update the status after sending the message successfully or failing
-def update_status(phone_number, status):
-    response = requests.post(update_api_url, json={'phone_number': phone_number, 'status': status})
+def update_status(phone_number, status, type):
+    response = requests.post(update_api_url, json={'phone_number': phone_number, 'status': status, 'type': type})
     return response.status_code == 200
 
 # Function to send a message via WhatsApp Web
@@ -72,12 +72,13 @@ while True:
                 phone_number = contact.get('phone_number')
                 name = contact.get('name')
                 message = contact.get('message')
+                type = contact.get('type')
 
                 if send_whatsapp_message(phone_number, message):
                     print(f"Message sent to {name} at {phone_number}")
 
                     # Update the status in the API after successful sending
-                    if update_status(phone_number, 'message_sent'):
+                    if update_status(phone_number, 'message_sent', type):
                         print(f"Status updated for {phone_number} (message sent)")
                     else:
                         print(f"Failed to update status for {phone_number}")

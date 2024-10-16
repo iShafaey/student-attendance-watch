@@ -27,12 +27,29 @@ class ApiController extends Controller
             'message_failed' => 'failed',
         ];
 
-        if (array_key_exists($request->status, $statusMapping)) {
-            StudentAttendance::wherePhoneNumber($request->phone_number)->update(['status' => $statusMapping[$request->status]]);
-            return Response::json(['status' => 'success'], 200);
-        } else {
+        if (!array_key_exists($request->status, $statusMapping)) {
             return Response::json(['status' => 'fail'], 400);
         }
+
+        $datetimeField = match ($request->type) {
+            'attendance' => 'attendance_datetime',
+            'expenses' => 'expenses_datetime',
+            'exam' => 'exam_result_datetime',
+            default => null,
+        };
+
+        if ($datetimeField) {
+            $studentRecord = StudentRecord::wherePhoneNumber($request->phone_number)
+                ->whereNotNull($datetimeField)
+                ->first();
+
+            if ($studentRecord) {
+                $studentRecord->update(['status' => $statusMapping[$request->status]]);
+                return Response::json(['status' => 'success'], 200);
+            }
+        }
+
+        return Response::json(['status' => 'fail'], 400);
     }
 
     public function getOptions() {
