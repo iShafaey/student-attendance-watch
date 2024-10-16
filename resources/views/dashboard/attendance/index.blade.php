@@ -22,24 +22,10 @@
 @endsection
 
 @push('stylesheet')
-    <style>
-        .dt-paging {
-            direction: ltr;
-        }
 
-        th, td {
-            text-align: center !important;
-            padding: 10px;
-        }
-
-        td {
-            cursor: pointer;
-        }
-    </style>
 @endpush
 
 @push('script')
-    <script src="{{ asset('layouts/dashboard/jquery.scannerdetection.min.js') }}"></script>
     <script>
         // let table = $('.dataTable').DataTable({
         //     ordering: false,

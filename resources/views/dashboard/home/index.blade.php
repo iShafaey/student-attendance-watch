@@ -20,6 +20,8 @@
                     <table class="table table-striped dataTable" style="width:100%">
                         <thead>
                         <tr>
+                            <th>ID</th>
+                            <th>CLASS_ID</th>
                             <th>#</th>
                             <th>اسم الطالب</th>
                             <th>ولي الامر</th>
@@ -66,7 +68,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="class" class="form-label">الصف الدراسي</label>
-                                <input type="text" class="form-control" id="class" name="class" required>
+                                {{--<input type="text" class="form-control" id="class" name="class" required>--}}
+                                <select name="class" class="form-control" id="class" required>
+                                    @forelse($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->title }}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="join_date" class="form-label">تاريخ الانضمام</label>
@@ -120,7 +128,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="_class" class="form-label">الصف الدراسي</label>
-                                <input type="text" class="form-control" id="_class" name="class" required>
+{{--                                <input type="text" class="form-control" id="_class" name="class" required>--}}
+                                <select name="class" class="form-control" id="_class" required>
+                                    @forelse($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->title }}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="_join_date" class="form-label">تاريخ الانضمام</label>
@@ -146,20 +160,7 @@
 @endsection
 
 @push('stylesheet')
-    <style>
-        .dt-paging {
-            direction: ltr;
-        }
 
-        th, td {
-            text-align: center !important;
-            padding: 10px;
-        }
-
-        td {
-            cursor: pointer;
-        }
-    </style>
 @endpush
 
 @push('script')
@@ -173,6 +174,8 @@
                 stateSave: false,
                 ajax: '{{ route('ajax.students') }}',
                 columns: [
+                    {data: 'id', name: 'id', visible: false},
+                    {data: 'class_id', name: 'class_id', visible: false},
                     {data: 'student_id', name: 'student_id'},
                     {data: 'student_name', name: 'student_name'},
                     {data: 'father_name', name: 'father_name'},
@@ -191,13 +194,13 @@
                 console.log(table.row(this).data());
                 var data = table.row(this).data();
 
-                $('#student_id').val(data.student_id);
+                $('#student_id').val(data.id);
                 $('#_student_code').val(data.student_code);
                 $('#_student_name').val(data.student_name);
                 $('#_father_name').val(data.father_name);
                 $('#_age').val(data.age);
                 $('#_phone_number').val(data.phone_number);
-                $('#_class').val(data.class);
+                $('#_class').val(data.class_id).change();
                 $('#_fees').val(data.fees);
                 $('#_join_date').val(data.join_date);
 

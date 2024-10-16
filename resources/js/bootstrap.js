@@ -5,3 +5,4 @@ import 'datatables.net-bs5';
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+

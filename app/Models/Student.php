@@ -13,6 +13,10 @@ class Student extends Model
 
     protected $fillable = ['student_name', 'father_name', 'phone_number', 'country_code', 'join_date', 'fees', 'status', 'age', 'class', 'student_code'];
 
+    public function student_class() {
+        return $this->hasOne(StudentClass::class, 'id', 'class');
+    }
+
     protected function studentFullName(): Attribute
     {
         return Attribute::make(

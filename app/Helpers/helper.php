@@ -19,3 +19,15 @@ function GenerateRandomCode($length = 5, $type = 'number', $uppercase = true, $p
         }
     }
 }
+
+function ConvertArrayToText($data) {
+    $subjects = $data['subject_title'];
+    $degrees = $data['degree'];
+    $result = [];
+
+    foreach ($subjects as $index => $subject) {
+        $result[] = "{$subject}: {$degrees[$index]}";
+    }
+
+    return implode('، ', $result);
+}

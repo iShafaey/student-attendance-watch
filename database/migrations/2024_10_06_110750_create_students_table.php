@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('country_code', 10)->default('+20');
             $table->integer('age')->nullable();
             $table->string('student_code')->default(0);
-            $table->string('class')->nullable();
+            $table->integer('class')->nullable();
             $table->date('join_date');
             $table->decimal('fees', 10, 2)->default(0);
             $table->enum('status', ['active', 'inactive', 'pending'])->default('active');

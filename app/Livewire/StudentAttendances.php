@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Student;
 use App\Models\StudentAttendance;
+use App\Models\StudentRecord;
 use Carbon\Carbon;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -22,13 +23,19 @@ class StudentAttendances extends Component
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
         $searchTerm = "%" . $barcode . "%";
         try {
-            $student = Student::whereStudentCode($barcode)->firstOrFail();
-//            $student = Student::inRandomOrder()->first();
+//            $student = Student::whereStudentCode($barcode)->firstOrFail();
+            $student = Student::inRandomOrder()->first();
 
-            StudentAttendance::create([
+//            StudentAttendance::create([
+//                'student_id' => $student->id,
+//                'phone_number' => $student->country_code . $student->phone_number,
+//                'attendance_datetime' => Carbon::now()->toDateTimeString(),
+//            ]);
+
+            StudentRecord::create([
                 'student_id' => $student->id,
+                'attendance_datetime' => Carbon::now(),
                 'phone_number' => $student->country_code . $student->phone_number,
-                'attendance_datetime' => Carbon::now()->toDateTimeString(),
             ]);
 
             $this->alert('success', 'تم حضور الطالب بنجاح', [
@@ -48,7 +55,8 @@ class StudentAttendances extends Component
     }
 
     public function attendances() {
-        return StudentAttendance::orderByDesc('created_at')->paginate($this->perPage);
+//        return StudentAttendance::orderByDesc('created_at')->paginate($this->perPage);
+        return StudentRecord::whereNotNull('attendance_datetime')->orderByDesc('created_at')->paginate($this->perPage);
     }
 
     public function render()

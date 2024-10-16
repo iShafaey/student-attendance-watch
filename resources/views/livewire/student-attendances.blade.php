@@ -16,8 +16,8 @@
                 <td>{{ $item->id }}</td>
                 <td>{{ $item?->student?->student_code ?? "[غير معروف]" }}</td>
                 <td>{{ $item?->student?->fullName() ?? "[غير معروف]" }}</td>
-                <td dir="ltr">{{ $item?->attendance_datetime['time'] ?? "[غير معروف]" }}</td>
-                <td>{{ $item?->attendance_datetime['date'] ?? "[غير معروف]" }}</td>
+                <td dir="ltr">{{ $item?->attendance_datetime->format(' H:i A') ?? "[غير معروف]" }}</td>
+                <td>{{ $item?->attendance_datetime->format('Y-m-d') ?? "[غير معروف]" }}</td>
                 <td>
                     @if($item->status == 'pending')
                         <lable class="badge bg-warning">في الانتظار</lable>

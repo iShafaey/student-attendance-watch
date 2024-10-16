@@ -66,15 +66,12 @@ while True:
         if response.status_code == 200:
             data = response.json()
             contacts = data.get('contacts', [])  # Assuming the API returns a list of objects containing phone numbers and names
-            message_template = data.get('message')  # Get the message text from the API
 
             # Iterate over the numbers and send messages
             for contact in contacts:
                 phone_number = contact.get('phone_number')
                 name = contact.get('name')
-
-                # Personalize the message using the name
-                message = message_template.replace("{name}", name)  # Replace {name} with the actual name
+                message = contact.get('message')
 
                 if send_whatsapp_message(phone_number, message):
                     print(f"Message sent to {name} at {phone_number}")

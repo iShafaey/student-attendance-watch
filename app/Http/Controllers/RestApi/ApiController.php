@@ -5,16 +5,16 @@ namespace App\Http\Controllers\RestApi;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentAttendanceResource;
 use App\Models\StudentAttendance;
+use App\Models\StudentRecord;
 use Illuminate\Http\Request;
 use Response;
 
 class ApiController extends Controller
 {
     public function getNumbers() {
-        $student_attendance = StudentAttendance::whereIn('status', ['pending'])->get();
+        $student_attendance = StudentRecord::whereIn('status', ['pending'])->get();
         $contacts = StudentAttendanceResource::collection($student_attendance)->resolve();
         return Response::json([
-            'message' => option('message'),
             'delay_min' => option('delay_min'),
             'delay_max' => option('delay_max'),
             'contacts' => $contacts
