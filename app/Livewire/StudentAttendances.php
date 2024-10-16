@@ -23,8 +23,8 @@ class StudentAttendances extends Component
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
         $searchTerm = "%" . $barcode . "%";
         try {
-//            $student = Student::whereStudentCode($barcode)->firstOrFail();
-            $student = Student::inRandomOrder()->first();
+            $student = Student::whereStudentCode($barcode)->firstOrFail();
+//            $student = Student::inRandomOrder()->first();
 
 //            StudentAttendance::create([
 //                'student_id' => $student->id,
