@@ -179,6 +179,7 @@ class HomeController extends Controller {
     }
 
     public function studentExport() {
+        // Generateing Students List
         $students = Student::select(['student_code', 'student_name', 'father_name', 'class', 'join_date'])->get();
         $students_list = collect($students)->map(function ($student) {
             return [
@@ -192,7 +193,7 @@ class HomeController extends Controller {
         })->toArray();
 
         $data = [
-            ['كود الطالب', 'اسم الطالب', 'اسم الأب', 'الصف', 'تاريخ الانضمام'],
+            ['student_code', 'student_name', 'father_name', 'class', 'join_date'],
             ...$students_list
         ];
 
@@ -208,6 +209,33 @@ class HomeController extends Controller {
         }
 
         fclose($handle);
+
+        // Generateing Students Barcode List
+        $students_list = collect($students)->map(function ($student) {
+            return [
+                'student_code' => $student->student_code,
+                'student_name' => $student->student_name,
+            ];
+        })->toArray();
+
+        $data = [
+            ['student_code', 'student_name'],
+            ...$students_list
+        ];
+
+        $filename = 'students_list_barcodes' . '.csv';
+        $filePath = 'exports/' . $filename;
+
+        $handle = fopen(public_path('downloads/' . $filePath), 'w');
+
+        fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        foreach ($data as $row) {
+            fputcsv($handle, $row);
+        }
+
+        fclose($handle);
+
 
         $directoryPath = public_path('\\downloads\\exports\\');
 
