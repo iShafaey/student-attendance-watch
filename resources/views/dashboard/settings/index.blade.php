@@ -15,7 +15,11 @@
                         @csrf
                         <div class="form-group mb-4">
                             <label class="mb-2">رساله حضور الطالب</label>
-                            <textarea class="form-control" name="attendance_message" rows="1">{{ option('attendance_message') }}</textarea>
+                            <textarea class="form-control" name="attendance_in_message" rows="1">{{ option('attendance_in_message') }}</textarea>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="mb-2">رساله إنصراف الطالب</label>
+                            <textarea class="form-control" name="attendance_out_message" rows="1">{{ option('attendance_out_message') }}</textarea>
                         </div>
                         <div class="form-group mb-4">
                             <label class="mb-2">رساله دفع الطالب المصاريف</label>
@@ -26,7 +30,12 @@
                             <textarea class="form-control" name="exam_message" rows="1">{{ option('exam_message') }}</textarea>
                         </div>
                         <div class="form-group mt-4">
-                            <h6 class="mb-2">وقت الانتظار بين الرسائل</h6>
+                            <h6 class="mb-2">
+                                وقت الانتظار بين الرسائل
+                                <sup>
+                                    <small class="text-danger">(بالثواني)</small>
+                                </sup>
+                            </h6>
                             <div class="row">
                                 <div class="col-auto">
                                     <label>الادني</label>

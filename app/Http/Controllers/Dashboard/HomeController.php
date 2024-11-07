@@ -184,16 +184,14 @@ class HomeController extends Controller {
         $students_list = collect($students)->map(function ($student) {
             return [
                 'student_code' => $student->student_code,
-                'student_name' => $student->student_name,
-                'father_name' => $student->father_name,
-                'class' => $student->class,
+                'student_name' => $student->student_name . " " . $student->father_name,
                 'class_name' => $student?->student_class?->title ?? "[غير موجود]",
                 'join_date' => $student->join_date,
             ];
         })->toArray();
 
         $data = [
-            ['student_code', 'student_name', 'father_name', 'class', 'join_date'],
+            ['student_code', 'student_name', 'class', 'join_date'],
             ...$students_list
         ];
 
@@ -214,7 +212,7 @@ class HomeController extends Controller {
         $students_list = collect($students)->map(function ($student) {
             return [
                 'student_code' => $student->student_code,
-                'student_name' => $student->student_name,
+                'student_name' => $student->student_name . " " . $student->father_name,
             ];
         })->toArray();
 

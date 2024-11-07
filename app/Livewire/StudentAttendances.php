@@ -18,13 +18,13 @@ class StudentAttendances extends Component
     protected $listeners = ['scannerDetection'];
     public $tabActive = true;
     public $perPage = 10;
+    public $attendanceCount = 0, $departureCount = 0, $currentCount = 0;
 
     public function scannerDetection($barcode) {
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
-        $searchTerm = "%" . $barcode . "%";
         try {
-            $student = Student::whereStudentCode($barcode)->firstOrFail();
-//            $student = Student::inRandomOrder()->first();
+//            $student = Student::whereStudentCode($barcode)->firstOrFail();
+            $student = Student::first();
 
 //            StudentAttendance::create([
 //                'student_id' => $student->id,
@@ -32,15 +32,30 @@ class StudentAttendances extends Component
 //                'attendance_datetime' => Carbon::now()->toDateTimeString(),
 //            ]);
 
-            StudentRecord::create([
-                'student_id' => $student->id,
-                'attendance_datetime' => Carbon::now(),
-                'phone_number' => $student->country_code . $student->phone_number,
-            ]);
+            $studentRecord = StudentRecord::where('student_id', $student->id)
+                ->whereDate('attendance_in_datetime', Carbon::today())
+                ->whereNull('attendance_out_datetime');
 
-            $this->alert('success', 'تم حضور الطالب بنجاح', [
-                'toast' => true
-            ]);
+            if ($studentRecord->exists()) {
+                $studentRecord->update([
+                    'attendance_out_datetime' => Carbon::now(),
+                    'status' => 'pending'
+                ]);
+
+                $this->alert('success', 'تم إنصراف الطالب بنجاح', [
+                    'toast' => true
+                ]);
+            } else {
+                StudentRecord::create([
+                    'student_id' => $student->id,
+                    'attendance_in_datetime' => Carbon::now(),
+                    'phone_number' => $student->country_code . $student->phone_number,
+                ]);
+
+                $this->alert('success', 'تم حضور الطالب بنجاح', [
+                    'toast' => true
+                ]);
+            }
 
             $this->dispatch('run_beep_sound');
 
@@ -56,11 +71,30 @@ class StudentAttendances extends Component
 
     public function attendances() {
 //        return StudentAttendance::orderByDesc('created_at')->paginate($this->perPage);
-        return StudentRecord::whereNotNull('attendance_datetime')->orderByDesc('created_at')->paginate($this->perPage);
+        return StudentRecord::whereNotNull('attendance_in_datetime')
+            ->orWhereNotNull('attendance_out_datetime')
+            ->orderByDesc('created_at')
+            ->paginate($this->perPage);
+    }
+
+    public function getCounterInOut() {
+        $records = StudentRecord::where(function($query) {
+            $query->whereNotNull('attendance_in_datetime')
+                ->orWhereNotNull('attendance_out_datetime');
+        })
+            ->whereDate('updated_at', Carbon::now())
+            ->get();
+
+        $this->attendanceCount = $records->whereNotNull('attendance_in_datetime')->count();
+
+        $this->departureCount = $records->whereNotNull('attendance_out_datetime')->count();
+
+        $this->currentCount = ($this->attendanceCount - $this->departureCount);
     }
 
     public function render()
     {
+        $this->getCounterInOut();
         $items = $this->attendances();
 
         return view('livewire.student-attendances', ['items' => $items]);

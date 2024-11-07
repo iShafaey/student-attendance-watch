@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('student_records', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('student_id');
-            $table->dateTime('attendance_datetime')->nullable();
+            $table->dateTime('attendance_in_datetime')->nullable();
+            $table->dateTime('attendance_out_datetime')->nullable();
             $table->dateTime('expenses_datetime')->nullable();
             $table->dateTime('exam_result_datetime')->nullable();
             $table->decimal('expenses_value', 10, 2)->default(0);

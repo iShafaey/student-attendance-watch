@@ -10,8 +10,23 @@ use Illuminate\Database\Eloquent\Model;
 class StudentRecord extends Model
 {
     use HasFactory;
-    protected $casts = ['attendance_datetime' => 'datetime'];
-    protected $fillable = ['student_id', 'attendance_datetime', 'expenses_datetime', 'exam_result_datetime', 'expenses_value', 'exam_result', 'phone_number', 'status'];
+    protected $casts = [
+        'attendance_in_datetime' => 'datetime',
+        'attendance_out_datetime' => 'datetime'
+    ];
+
+    protected $fillable = [
+        'student_id',
+        'attendance_datetime',
+        'expenses_datetime',
+        'exam_result_datetime',
+        'expenses_value',
+        'exam_result',
+        'phone_number',
+        'status',
+        'attendance_in_datetime',
+        'attendance_out_datetime'
+    ];
 
 //    protected function attendanceDatetime(): Attribute
 //    {

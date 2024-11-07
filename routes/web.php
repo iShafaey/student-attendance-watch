@@ -21,6 +21,7 @@ Route::get('/students/exam-results', [HomeController::class, 'examResults'])->na
 Route::get('/students/expenses', [HomeController::class, 'expenses'])->name('students.expenses');
 Route::post('/students/new', [HomeController::class, 'newStudent'])->name('new.student');
 Route::post('/students/update', [HomeController::class, 'updateStudent'])->name('update.student');
+Route::post('/students/delete', [HomeController::class, 'deleteStudent'])->name('student.delete');
 Route::post('/students/new-expenses', [HomeController::class, 'studentNewExpenses'])->name('students.new-expenses');
 Route::get('/students/export', [HomeController::class, 'studentExport'])->name('students.export');
 Route::post('/students/new-exam-results', [HomeController::class, 'newExamResults'])->name('students.new-exam-results');
