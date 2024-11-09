@@ -132,7 +132,8 @@
             }, 25000);
 
             $('.student_code').on('change', function() {
-                var selectedValue = $(this).val();
+                let selectedValue = $(this).val();
+                console.log(selectedValue);
                 fetchSubjectsData(selectedValue);
             });
 
