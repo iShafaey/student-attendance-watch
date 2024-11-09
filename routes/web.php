@@ -34,4 +34,8 @@ Route::get('/ajax/subjects', [HomeController::class, 'subjects'])->name('ajax.su
 Route::get('/ajax/get-subjects-render', [HomeController::class, 'getSubjectsRender'])->name('ajax.get-subjects-render');
 Route::get('/ajax/expenses', [HomeController::class, 'getExpenses'])->name('ajax.expenses');
 Route::post('/settings/new-class', [HomeController::class, 'newClass'])->name('settings.new-class');
+Route::post('/settings/update-class', [HomeController::class, 'updateClass'])->name('settings.update-class');
+Route::post('/settings/remove-class', [HomeController::class, 'removeClass'])->name('settings.remove-class');
 Route::post('/settings/new-subject', [HomeController::class, 'newSubject'])->name('settings.new-subject');
+Route::post('/settings/update-subject', [HomeController::class, 'updateSubject'])->name('settings.update-subject');
+Route::post('/settings/remove-subject', [HomeController::class, 'removeSubject'])->name('settings.remove-subject');

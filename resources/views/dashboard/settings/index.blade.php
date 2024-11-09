@@ -60,7 +60,9 @@
                     </div>
                     <div class="float-start">
                         <div class="btn-group" role="group" aria-label="Basic example" dir="ltr">
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#new-class">اضف صف جديد</button>
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#new-class">اضف صف
+                                جديد
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -83,7 +85,9 @@
                     </div>
                     <div class="float-start">
                         <div class="btn-group" role="group" aria-label="Basic example" dir="ltr">
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#new-subject">اضف مادة جديد</button>
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#new-subject">اضف
+                                مادة جديد
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -115,6 +119,10 @@
                                 <label for="title" class="form-label">اسم الصف</label>
                                 <input name="title" id="title" class="form-control">
                             </div>
+                            <div class="mb-3">
+                                <label for="subjects" class="form-label">المواد الدراسية</label>
+                                <select class="form-control select-plus-tags" name="subjects[]" id="subjects" multiple></select>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -122,6 +130,44 @@
                         <button onclick="$('#add-new-classes').submit();" type="button" class="btn btn-primary">
                             حفظ البيانات
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="edit-class" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">تعديل الصف</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-new-classes" action="{{ route('settings.update-class') }}" method="post">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="_title" class="form-label">اسم الصف</label>
+                                <input name="_title" id="_title" class="form-control">
+                            </div>
+                            <input type="hidden" name="_id" id="_id" value="">
+                        </form>
+
+                        <form id="remove-class" method="post" action="{{ route('settings.remove-class') }}">
+                            @csrf
+                            <input type="hidden" name="_id" id="_id" value="">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex justify-content-between w-100">
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+                                <button onclick="$('#edit-new-classes').submit();" type="button" class="btn btn-primary me-2">
+                                    حفظ البيانات
+                                </button>
+                            </div>
+                            <button onclick="$('#remove-class').submit();" type="button" class="btn btn-danger">
+                                حذف الصف
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,6 +202,52 @@
                         <button onclick="$('#add-new-subject').submit();" type="button" class="btn btn-primary">
                             حفظ البيانات
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="edit-subject" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">تعديل المادة</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form id="update-new-subject" action="{{ route('settings.update-subject') }}" method="post">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="_title" class="form-label">اسم المادة</label>
+                                <input name="_title" id="_title" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label for="_class_id" class="form-label">اختر الصف</label>
+                                <select class="form-control" name="_class_id" id="_class_id" required>
+                                    @forelse($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->title }}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
+                            </div>
+                            <input type="hidden" name="_id" id="_id" value="">
+                        </form>
+                        <form id="remove-subject" method="post" action="{{ route('settings.remove-subject') }}">
+                            @csrf
+                            <input type="hidden" name="_id" id="_id" value="">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex justify-content-between w-100">
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+                                <button onclick="$('#update-new-subject').submit();" type="button" class="btn btn-primary me-2">
+                                    حفظ البيانات
+                                </button>
+                            </div>
+                            <button onclick="$('#remove-subject').submit();" type="button" class="btn btn-danger">
+                                حذف المادة
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -205,6 +297,27 @@
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/2.1.8/i18n/ar.json',
                 }
+            });
+
+            $('.dataTable-classes tbody').on('click', 'tr', function () {
+                var data = tableClasses.row(this).data();
+
+                $('#edit-new-classes #_title').val(data.title);
+                $('#edit-new-classes #_id').val(data.id);
+                $('#remove-class #_id').val(data.id);
+
+                $('#edit-class').modal('show');
+            });
+
+            $('.dataTable-subjects tbody').on('click', 'tr', function () {
+                var data = tableSubjects.row(this).data();
+
+                $('#update-new-subject #_title').val(data.title);
+                $('#update-new-subject #_class_id').val(data.class_id).change();
+                $('#update-new-subject #_id').val(data.id);
+                $('#remove-subject #_id').val(data.id);
+
+                $('#edit-subject').modal('show');
             });
         });
     </script>

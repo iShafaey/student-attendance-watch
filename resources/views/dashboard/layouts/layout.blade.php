@@ -99,8 +99,12 @@
 
 <script>
     $(document).ready(function () {
-        $('.select-plus ').each(function() {
+        $('.select-plus').each(function() {
             $(this).select2({ dropdownParent: $(this).parent()});
+        })
+
+        $('.select-plus-tags').each(function() {
+            $(this).select2({tags: true, dropdownParent: $(this).parent()});
         })
 
         // $('body').on('shown.bs.modal', '.modal', function () {

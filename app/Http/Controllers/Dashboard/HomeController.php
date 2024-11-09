@@ -249,8 +249,33 @@ class HomeController extends Controller {
     }
 
     public function newClass(Request $request) {
-        StudentClass::create($request->all());
+        $newClass = StudentClass::create([
+            'title' => $request->title,
+        ]);
+
+        foreach ($request->subjects as $subject){
+            StudentSubject::create([
+                'class_id' => $newClass->id,
+                'title' => $subject,
+            ]);
+        }
+
         return redirect()->back()->with('success', 'تم حفظ الصف الدراسي بنجاح');
+    }
+
+    public function updateClass(Request $request) {
+        StudentClass::find($request->_id)->update([
+            'title' => $request->_title,
+        ]);
+
+        return redirect()->back()->with('success', 'تم تعديل الصف الدراسي بنجاح');
+    }
+
+    public function removeClass(Request $request) {
+        StudentClass::find($request->_id)->delete();
+        StudentSubject::where('class_id', $request->_id)->delete();
+
+        return redirect()->back()->with('success', 'تم حذف الصف والمواد الفرعيه الخاصه به بنجاح');
     }
 
     public function newSubject(Request $request) {
@@ -258,8 +283,24 @@ class HomeController extends Controller {
         return redirect()->back()->with('success', 'تم حفظ المادة بنجاح');
     }
 
+    public function updateSubject(Request $request) {
+        StudentSubject::find($request->_id)->update([
+            'title' => $request->_title,
+            'class_id' => $request->_class_id,
+        ]);
+
+        return redirect()->back()->with('success', 'تم تعديل المادة بنجاح');
+    }
+
+    public function removeSubject(Request $request) {
+        StudentSubject::find($request->_id)->delete();
+
+        return redirect()->back()->with('success', 'تم حذف المادة بنجاح');
+    }
+
     public function getSubjectsRender(Request $request) {
-        $subjects = StudentSubject::whereClassId($request->value)->get()->reverse();
+        $student = Student::find($request->value);
+        $subjects = StudentSubject::whereClassId($student->class)->get()->reverse();
 
         return view('dashboard.home.subjects-rendered', [
             'subjects' => $subjects

@@ -69,7 +69,7 @@
                             <div class="mb-3">
                                 <label for="class" class="form-label">الصف الدراسي</label>
                                 {{--<input type="text" class="form-control" id="class" name="class" required>--}}
-                                <select name="class" class="form-control" id="class" required>
+                                <select name="class" class="form-control select-plus" id="class" required>
                                     @forelse($classes as $class)
                                         <option value="{{ $class->id }}">{{ $class->title }}</option>
                                     @empty
@@ -129,7 +129,7 @@
                             <div class="mb-3">
                                 <label for="_class" class="form-label">الصف الدراسي</label>
 {{--                                <input type="text" class="form-control" id="_class" name="class" required>--}}
-                                <select name="class" class="form-control" id="_class" required>
+                                <select name="class" class="form-control select-plus" id="_class" required>
                                     @forelse($classes as $class)
                                         <option value="{{ $class->id }}">{{ $class->title }}</option>
                                     @empty
