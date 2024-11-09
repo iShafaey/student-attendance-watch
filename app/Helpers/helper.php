@@ -26,7 +26,9 @@ function ConvertArrayToText($data) {
     $result = [];
 
     foreach ($subjects as $index => $subject) {
-        $result[] = "{$subject}: {$degrees[$index]}";
+        if ($degrees[$index]) {
+            $result[] = "{$subject}: {$degrees[$index]}";
+        }
     }
 
     return implode('، ', $result);
