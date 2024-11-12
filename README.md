@@ -124,7 +124,7 @@ Log in via WhatsApp Web to complete setup, then test the system.
                 "name": "محمد",
                 "message": "نود إبلاغكم بأن الطالب محمد قد حضر اليوم في تمام الساعة 12:24 AM.",
                 "type": "attendance_in" | "attendance_out" | "absence" | "expenses" | "expenses_reminder" | "exam"
-            },
+            }
         ]
     }
    ```
@@ -135,6 +135,17 @@ Log in via WhatsApp Web to complete setup, then test the system.
    {
     "status": "success"
    }
+   ```
+
+## Api Update Status
+- update-status
+
+```json
+   {
+    "phone_number": "+20100000000",
+    "status": "message_sent",
+    "type": "attendance_in"
+    }
    ```
 
 ## License
