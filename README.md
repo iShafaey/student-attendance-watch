@@ -95,16 +95,20 @@ User-friendly interface for adding student data, including:
 ### Python Setup
 1. Navigate to the following path:
    ```
-   public/services/whatsapp-sender
+   public/services/
    ```
 2. Open this path in Terminal as Administrator.
 3. Install dependencies with:
    ```bash
    pip install -r requirements.txt
    ```
-4. Run the script using:
+4. Run WhatsApp messaging provider:
    ```bash
-   run-service.bat
+   /whatsapp-sender/run-service.bat
+   ```
+5. Run the script to convert students' barcodes to PNG. (Must export the student file.):
+   ```bash
+   /barcode-generator/run-service.bat
    ```
 
 ### WhatsApp Web Login
