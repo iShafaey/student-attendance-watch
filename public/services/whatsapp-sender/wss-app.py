@@ -72,6 +72,9 @@ while True:
             data = response.json()
             contacts = data.get('contacts', [])  # Assuming the API returns a list of objects containing phone numbers and names
 
+            if not contacts:
+                print(Fore.MAGENTA + Style.BRIGHT + f"No new messages to fetch.")
+
             total_contacts = len(contacts)
             sent_count = 0
 

@@ -18,8 +18,8 @@
                 <td>{{ $item?->student?->student_code ?? "[غير معروف]" }}</td>
                 <td>{{ $item?->student?->fullName() ?? "[غير معروف]" }}</td>
                 @if(null != $item?->absence_datetime)
-                    <td dir="rtl">
-                        <span class="badge bg-danger">غائب</span>
+                    <td dir="rtl" colspan="2">
+                        <span class="badge bg-danger w-100">لم يتم الحضور (غائب)</span>
                     </td>
                 @else
                     <td dir="ltr">
@@ -56,6 +56,9 @@
                 </td>
                 <td class="bg-light">
                     <b class="badge {{ $currentCount < 1 ? "bg-success" : "bg-danger" }}">الموجودين: {{ $currentCount }}</b>
+                </td>
+                <td class="bg-light">
+                    <b class="badge bg-danger">الغائبين: {{ $absenceCount }}</b>
                 </td>
                 <td colspan="4"></td>
             </tr>

@@ -18,7 +18,7 @@ class StudentAttendances extends Component
     protected $listeners = ['scannerDetection'];
     public $tabActive = true;
     public $perPage = 10;
-    public $attendanceCount = 0, $departureCount = 0, $currentCount = 0;
+    public $attendanceCount = 0, $departureCount = 0, $absenceCount = 0, $currentCount = 0;
 
     public function scannerDetection($barcode) {
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
@@ -73,6 +73,7 @@ class StudentAttendances extends Component
 //        return StudentAttendance::orderByDesc('created_at')->paginate($this->perPage);
         return StudentRecord::whereNotNull('attendance_in_datetime')
             ->orWhereNotNull('attendance_out_datetime')
+            ->orWhereNotNull('absence_datetime')
             ->orderByDesc('created_at')
             ->paginate($this->perPage);
     }
@@ -80,7 +81,8 @@ class StudentAttendances extends Component
     public function getCounterInOut() {
         $records = StudentRecord::where(function($query) {
             $query->whereNotNull('attendance_in_datetime')
-                ->orWhereNotNull('attendance_out_datetime');
+                ->orWhereNotNull('attendance_out_datetime')
+                ->orWhereNotNull('absence_datetime');
         })
             ->whereDate('updated_at', Carbon::now())
             ->get();
@@ -88,6 +90,8 @@ class StudentAttendances extends Component
         $this->attendanceCount = $records->whereNotNull('attendance_in_datetime')->count();
 
         $this->departureCount = $records->whereNotNull('attendance_out_datetime')->count();
+
+        $this->absenceCount = $records->whereNotNull('absence_datetime')->count();
 
         $this->currentCount = ($this->attendanceCount - $this->departureCount);
     }

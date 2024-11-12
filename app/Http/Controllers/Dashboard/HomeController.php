@@ -134,10 +134,13 @@ class HomeController extends Controller {
     }
 
     public function getExpenses() {
-        $data = StudentRecord::whereNotNull('expenses_datetime')->get()->reverse();
+        $data = StudentRecord::whereNotNull('expenses_datetime')->orWhereNotNull('expenses_reminder_datetime')->get()->reverse();
         return Datatables::of($data)
             ->addColumn('student_id', function ($value) {
                 return $value?->student?->student_code ?? "0000";
+            })
+            ->addColumn('paid_status', function ($value) {
+                return null !== $value?->expenses_reminder_datetime ? "<span class='badge bg-danger'>تنبيه بالدفع</span>" : "<span class='badge bg-success'>تم الدفع</span>";
             })
             ->editColumn('student_name', function ($value) {
                 return $value?->student?->fullName() ?? "[غير موجود]";
@@ -154,7 +157,7 @@ class HomeController extends Controller {
                     return '<lable class="badge bg-danger">فشل الارسال</lable>';
                 endif;
             })
-            ->rawColumns(['created_at', 'status'])
+            ->rawColumns(['created_at', 'status', 'paid_status'])
             ->make(true);
     }
 

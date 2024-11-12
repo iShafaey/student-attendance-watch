@@ -26,7 +26,9 @@ class StudentRecord extends Model
         'phone_number',
         'status',
         'attendance_in_datetime',
-        'attendance_out_datetime'
+        'attendance_out_datetime',
+        'absence_datetime',
+        'expenses_reminder_datetime'
     ];
 
 //    protected function attendanceDatetime(): Attribute

@@ -23,7 +23,8 @@
                             <th>كود الطالب</th>
                             <th>اسم الطالب</th>
                             <th>قيمة المدفوعات</th>
-                            <th>الحاله</th>
+                            <th>حالة الدفع</th>
+                            <th>إعلام ولي الامر</th>
                             <th>تاريخ الاضافة</th>
                         </tr>
                         </thead>
@@ -78,7 +79,7 @@
                             @csrf
                             <div class="mb-3 mt-3">
                                 <input type="hidden" name="id" id="exam_result_id">
-                                <button type="submit" class="btn btn-danger d-block w-100">حذف النتيجة</button>
+                                <button type="submit" class="btn btn-danger d-block w-100">حذف السداد</button>
                             </div>
                         </form>
                     </div>
@@ -111,6 +112,7 @@
                     {data: 'student_id', name: 'student_id'},
                     {data: 'student_name', name: 'student_name'},
                     {data: 'expenses_value', name: 'expenses_value'},
+                    {data: 'paid_status', name: 'paid_status'},
                     {data: 'status', name: 'status'},
                     {data: 'created_at', name: 'created_at'},
 
