@@ -5,3 +5,4 @@ pandas
 python-barcode
 Pillow
 unidecode
+colorama
