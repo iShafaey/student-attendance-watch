@@ -77,6 +77,7 @@ while True:
 
             total_contacts = len(contacts)
             sent_count = 0
+            print(Fore.GREEN + Style.BRIGHT + f"Found {total_contacts} new messages.")
 
             # Iterate over the numbers and send messages
             for contact in contacts:
