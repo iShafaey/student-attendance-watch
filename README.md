@@ -106,7 +106,7 @@ User-friendly interface for adding student data, including:
    ```bash
    /whatsapp-sender/run-service.bat
    ```
-5. Run the script to convert students' barcodes to PNG. (Must export the student file.):
+5. Run the script to convert students' barcodes to `.PNG` format (Must export the student file.):
    ```bash
    /barcode-generator/run-service.bat
    ```
