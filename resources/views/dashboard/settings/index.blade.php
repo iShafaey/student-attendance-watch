@@ -14,19 +14,27 @@
                     <form action="{{ route('settings.update') }}" method="post">
                         @csrf
                         <div class="form-group mb-4">
-                            <label class="mb-2">رساله حضور الطالب</label>
+                            <label class="mb-2">رساله حضور الطالب:</label>
                             <textarea class="form-control" name="attendance_in_message" rows="1">{{ option('attendance_in_message') }}</textarea>
                         </div>
                         <div class="form-group mb-4">
-                            <label class="mb-2">رساله إنصراف الطالب</label>
+                            <label class="mb-2">رساله إنصراف الطالب:</label>
                             <textarea class="form-control" name="attendance_out_message" rows="1">{{ option('attendance_out_message') }}</textarea>
                         </div>
                         <div class="form-group mb-4">
-                            <label class="mb-2">رساله دفع الطالب المصاريف</label>
+                            <label class="mb-2">رساله غياب الطالب:</label>
+                            <textarea class="form-control" name="attendance_absence_message" rows="1">{{ option('attendance_absence_message') }}</textarea>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="mb-2">رسالة تنبيه بأنه لم يتم دفع المصاريف:</label>
+                            <textarea class="form-control" name="expenses_reminder_message" rows="2">{{ option('expenses_reminder_message') }}</textarea>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="mb-2">رساله دفع الطالب المصاريف:</label>
                             <textarea class="form-control" name="expenses_message" rows="1">{{ option('expenses_message') }}</textarea>
                         </div>
                         <div class="form-group mb-4">
-                            <label class="mb-2">رساله نتيجه الطالب بالامتحان</label>
+                            <label class="mb-2">رساله نتيجه الطالب بالامتحان:</label>
                             <textarea class="form-control" name="exam_message" rows="1">{{ option('exam_message') }}</textarea>
                         </div>
                         <div class="form-group mt-4">

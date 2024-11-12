@@ -17,12 +17,18 @@
                 <td>{{ $item->id }}</td>
                 <td>{{ $item?->student?->student_code ?? "[غير معروف]" }}</td>
                 <td>{{ $item?->student?->fullName() ?? "[غير معروف]" }}</td>
-                <td dir="ltr">
-                    <span class="badge bg-primary">{{ $item?->attendance_in_datetime->format('H:i A') ?? "[غير معروف]" }}</span>
-                </td>
-                <td dir="ltr">
-                    <span class="badge bg-dark">{{ $item?->attendance_out_datetime ? $item?->attendance_out_datetime->format('H:i A') ?? "[غير معروف]" : "في الانتظار" }}</span>
-                </td>
+                @if(null != $item?->absence_datetime)
+                    <td dir="rtl">
+                        <span class="badge bg-danger">غائب</span>
+                    </td>
+                @else
+                    <td dir="ltr">
+                        <span class="badge bg-primary">{{ $item?->attendance_in_datetime->format('H:i A') ?? "[غير معروف]" }}</span>
+                    </td>
+                    <td dir="ltr">
+                        <span class="badge bg-dark">{{ $item?->attendance_out_datetime ? $item?->attendance_out_datetime->format('H:i A') ?? "[غير معروف]" : "في الانتظار" }}</span>
+                    </td>
+                 @endif
                 <td>{{ $item?->created_at->format('Y-m-d') ?? "[غير معروف]" }}</td>
                 <td>
                     @if($item->status == 'pending')

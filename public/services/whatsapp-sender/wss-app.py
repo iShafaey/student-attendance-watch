@@ -112,5 +112,7 @@ while True:
     except Exception as e:
         print(Fore.RED + f"Error occurred: {type(e).__name__}")
 
-    # Wait for 60 seconds before checking again
-    time.sleep(60)
+    # Wait before checking again
+    nextCheck = 60
+    print(Fore.YELLOW + f"Waiting for {nextCheck} seconds before fetching new messages...")
+    time.sleep(nextCheck)

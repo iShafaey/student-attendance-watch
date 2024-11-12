@@ -12,7 +12,8 @@ class StudentRecord extends Model
     use HasFactory;
     protected $casts = [
         'attendance_in_datetime' => 'datetime',
-        'attendance_out_datetime' => 'datetime'
+        'attendance_out_datetime' => 'datetime',
+        'absence_datetime' => 'datetime',
     ];
 
     protected $fillable = [

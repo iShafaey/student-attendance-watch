@@ -15,6 +15,7 @@ class ApiController extends Controller
     public function getNumbers() {
         $student_attendance = StudentRecord::whereIn('status', ['pending'])->get();
         $contacts = StudentAttendanceResource::collection($student_attendance)->resolve();
+
         return Response::json([
             'delay_min' => option('delay_min'),
             'delay_max' => option('delay_max'),
@@ -33,8 +34,11 @@ class ApiController extends Controller
         }
 
         $datetimeField = match ($request->type) {
-            'attendance' => 'attendance_datetime',
+            'attendance_in' => 'attendance_in_datetime',
+            'attendance_out' => 'attendance_out_datetime',
+            'absence' => 'absence_datetime',
             'expenses' => 'expenses_datetime',
+            'expenses_reminder' => 'expenses_reminder_datetime',
             'exam' => 'exam_result_datetime',
             default => null,
         };
