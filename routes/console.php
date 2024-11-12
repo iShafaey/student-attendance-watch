@@ -9,3 +9,7 @@ Schedule::command('run:check-expenses-not-paid')->monthly()->when(function () {
     $day = Carbon::now()->day;
     return in_array($day, [26, 27, 28]);
 });
+
+//Schedule::call(function (){
+//    Log::info('php artisan schedule:work started at ' . now());
+//})->everyMinute();
