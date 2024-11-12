@@ -41,6 +41,39 @@ User-friendly interface for adding student data, including:
 - Facilitates communication with parents.
 - Enables efficient tracking of attendance and message statuses.
 
+# Update Log
+
+**Date:** 2024-11-12
+## Recent Updates
+
+1. **Enhanced Message Console**
+    - Improved the Python-based message provider console.
+    - Added colored indicators for different message states.
+
+2. **Daily Automatic Absence Check**
+    - Added a feature to automatically verify student attendance daily at 7:00 PM.
+
+3. **Fee Reminder Notifications for Guardians**
+    - Added automatic reminders for unpaid fees, notifying the guardian on the 26th, 27th, and 28th of each month.
+
+4. **Scheduled Tasks for Automatic Verification**
+    - Utilized Laravel's scheduling services to handle the automated checks in points #2 and #3.
+
+5. **Student Class And Subjects**
+    - The student can now be linked to the class..
+
+6. **Parent Notification for Student Results**
+    - Implemented notifications to inform the guardian of the student’s academic results.
+
+7. **Tuition Fee Payment Confirmation Notification**
+    - Added feature to notify the guardian when a student completes a tuition payment.
+
+8. **Enhanced WhatsApp Message Sending in Python**
+    - Improved the Python code for the message provider, ensuring smooth WhatsApp message sending without issues.
+
+9. **Student Data Export with Barcode**
+    - Added the ability to export student data along with student barcodes in `.PNG` format.
+
 ## Requirements
 - **PHP:** Version >= 8.2
 - **Python:** Version >= 3.6
@@ -83,13 +116,14 @@ Log in via WhatsApp Web to complete setup, then test the system.
 
 ```json
    {
-    "message": "نود ان نبلغكم بإن تم حضور الطالب {name} اليوم الي الحصه.",
     "delay_min": "60",
     "delay_max": "80",
     "contacts": [
             {
                 "phone_number": "+20100000000",
-                "name": "محمد"
+                "name": "محمد",
+                "message": "نود إبلاغكم بأن الطالب محمد قد حضر اليوم في تمام الساعة 12:24 AM.",
+                "type": "attendance_in" | "attendance_out" | "absence" | "expenses" | "expenses_reminder" | "exam"
             },
         ]
     }
