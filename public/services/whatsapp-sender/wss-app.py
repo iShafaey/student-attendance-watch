@@ -48,12 +48,17 @@ def send_whatsapp_message(phone_number, message):
         whatsapp_url = f"https://web.whatsapp.com/send?phone={phone_number}"
         driver.get(whatsapp_url)
 
-        time.sleep(20)  # Wait for WhatsApp Web to load
+        time.sleep(15)  # Wait for WhatsApp Web to load
 
         # Wait for the message input field and send the message using Enter key
+#         message_box = driver.find_element(By.XPATH, '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p')
+#         message_box.send_keys(message)
+#         message_box.send_keys(Keys.ENTER)
         message_box = driver.find_element(By.XPATH, '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p')
         message_box.send_keys(message)
-        message_box.send_keys(Keys.ENTER)
+        time.sleep(2)
+        send_button = driver.find_element(By.XPATH, '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[2]/button')
+        send_button.click()
 
         time.sleep(5)
         return True
