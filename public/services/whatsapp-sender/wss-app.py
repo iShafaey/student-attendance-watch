@@ -137,8 +137,7 @@ def update_status(phone_number, status, msg_type):
         return True  # If the request is successful
     except requests.exceptions.RequestException as e:
         # Print the error details and return False
-        # error_message = f"An error occurred: {type(e).__name__}, Status Code: {getattr(e.response, 'status_code', 'N/A')}"
-        error_message = f"An error occurred: {e}, Status Code: {getattr(e.response, 'status_code', 'N/A')}"
+        error_message = f"An error occurred: {type(e).__name__}, Status Code: {getattr(e.response, 'status_code', 'N/A')}"
         print(Fore.RED + error_message)
         return False
 
