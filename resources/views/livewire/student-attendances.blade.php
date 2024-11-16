@@ -35,6 +35,8 @@
                         <lable class="badge bg-warning">في الانتظار</lable>
                     @elseif($item->status == 'sent')
                         <lable class="badge bg-success">تم الارسال</lable>
+                    @elseif($item->status == 'blacklist')
+                        <lable class="badge bg-dark">قائمة سوداء</lable>
                     @else
                         <lable class="badge bg-danger">فشل الارسال</lable>
                     @endif

@@ -13,7 +13,21 @@ use Response;
 class ApiController extends Controller
 {
     public function getNumbers() {
-        $student_attendance = StudentRecord::whereIn('status', ['pending', 'failed'])->get();
+//        $student_attendance = StudentRecord::whereIn('status', ['pending', 'failed'])
+//            ->orderByRaw("FIELD(status, 'pending') DESC")
+//            ->get();
+
+        $student_attendance = StudentRecord::whereIn('status', ['pending', 'failed'])
+            ->orderByRaw("
+                CASE
+                    WHEN status = 'pending' THEN 1
+                    WHEN status = 'failed' THEN 2
+                    ELSE 3
+                END
+            ")
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $contacts = StudentAttendanceResource::collection($student_attendance)->resolve();
 
         return Response::json([
@@ -27,6 +41,7 @@ class ApiController extends Controller
         $statusMapping = [
             'message_sent' => 'sent',
             'message_failed' => 'failed',
+            'number_blacklisted' => 'blacklist',
         ];
 
         if (!array_key_exists($request->status, $statusMapping)) {
@@ -44,10 +59,15 @@ class ApiController extends Controller
         };
 
         if ($datetimeField) {
-            $studentRecord = StudentRecord::wherePhoneNumber($request->phone_number)
-                ->whereStatus('pending')
-                ->whereNotNull($datetimeField)
-                ->first();
+            if ($request->status != 'number_blacklisted'){
+                $studentRecord = StudentRecord::wherePhoneNumber($request->phone_number)
+                    ->whereIn('status', ['pending', 'failed'])
+                    ->whereNotNull($datetimeField)
+                    ->orWhereNull($datetimeField)
+                    ->first();
+            } else {
+                $studentRecord = StudentRecord::wherePhoneNumber($request->phone_number);
+            }
 
             if ($studentRecord) {
                 $studentRecord->update(['status' => $statusMapping[$request->status]]);

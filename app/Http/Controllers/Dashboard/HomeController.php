@@ -9,6 +9,7 @@ use App\Models\StudentRecord;
 use App\Models\StudentSubject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
@@ -102,6 +103,8 @@ class HomeController extends Controller {
                     return '<lable class="badge bg-warning">في الانتظار</lable>';
                 elseif ($value->status == 'sent'):
                     return '<lable class="badge bg-success">تم الارسال</lable>';
+                elseif ($value->status == 'blacklist'):
+                    return '<lable class="badge bg-dark">قائمة سوداء</lable>';
                 else:
                     return '<lable class="badge bg-danger">فشل الارسال</lable>';
                 endif;
@@ -153,6 +156,8 @@ class HomeController extends Controller {
                     return '<lable class="badge bg-warning">في الانتظار</lable>';
                 elseif ($value->status == 'sent'):
                     return '<lable class="badge bg-success">تم الارسال</lable>';
+                elseif ($value->status == 'blacklist'):
+                    return '<lable class="badge bg-dark">قائمة سوداء</lable>';
                 else:
                     return '<lable class="badge bg-danger">فشل الارسال</lable>';
                 endif;
@@ -256,7 +261,7 @@ class HomeController extends Controller {
             'title' => $request->title,
         ]);
 
-        foreach ($request->subjects as $subject){
+        foreach ($request->subjects as $subject) {
             StudentSubject::create([
                 'class_id' => $newClass->id,
                 'title' => $subject,
@@ -356,5 +361,56 @@ class HomeController extends Controller {
     public function deleteStudent(Request $request) {
         Student::find($request->id)->delete();
         return redirect()->back()->with('success', 'تم حذف الطالب بنجاح');
+    }
+
+    public function studentsBlacklist() {
+        $filePath = public_path('services/whatsapp-sender/blacklist.txt');
+        if (File::exists($filePath)) {
+            $blacklists = File::lines($filePath)->map(function ($line) {
+                return preg_replace('/^\+20/', '', $line);
+            })->filter()->toArray();
+
+            $students = Student::whereIn('phone_number', $blacklists)->get();
+        } else {
+            $students = [];
+        }
+
+        return Datatables::of($students)
+            ->editColumn('student_name', function ($value) {
+                return $value->student_name . " " . $value->father_name;
+            })
+            ->editColumn('class', function ($value) {
+                return $value?->student_class?->title ?? "[غير موجود]";
+            })
+            ->addColumn('class_id', function ($value) {
+                return $value->class;
+            })
+            ->addColumn('student_id', function ($value) {
+                return $value->id . " ({$value->student_code})";
+            })
+            ->addColumn('actions', function ($value) {
+                return '<a href="'.route('ajax.students-blacklist.remove-phone-number', [$value->country_code . $value->phone_number]).'" class="btn btn-sm btn-danger">حذف</a>';
+            })
+            ->rawColumns(['student_name', 'actions'])
+            ->make(true);
+    }
+
+    public function removeStudentsBlacklist(Request $request, $phone_number) {
+        $numberToRemove = $phone_number;
+        $filePath = public_path('services/whatsapp-sender/blacklist.txt');
+
+        if (File::exists($filePath)) {
+            $blacklist = File::lines($filePath)->toArray();
+
+            $blacklist = array_filter($blacklist, function($line) use ($numberToRemove) {
+                return $line !== $numberToRemove;
+            });
+
+            File::put($filePath, implode(PHP_EOL, $blacklist) . PHP_EOL);
+
+            return redirect()->back()->with('success', 'تم نقل الرقم الي القائمة البيضاء');
+        } else {
+            return redirect()->back()->with('danger', 'لا يوجد ملف يحتوي عل القائمة السوداء');
+        }
     }
 }

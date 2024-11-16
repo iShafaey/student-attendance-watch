@@ -28,6 +28,8 @@ Route::post('/students/new-exam-results', [HomeController::class, 'newExamResult
 Route::post('/students/delete-exam-results', [HomeController::class, 'deleteExamResults'])->name('students.delete-exam-results');
 Route::post('/students/delete-expenses', [HomeController::class, 'deleteExpenses'])->name('students.delete-expenses');
 Route::get('/ajax/students', [HomeController::class, 'students'])->name('ajax.students');
+Route::get('/ajax/students-blacklist', [HomeController::class, 'studentsBlacklist'])->name('ajax.students-blacklist');
+Route::get('/ajax/students-blacklist/remove/{phone_number}', [HomeController::class, 'removeStudentsBlacklist'])->name('ajax.students-blacklist.remove-phone-number');
 Route::get('/ajax/exam-results', [HomeController::class, 'examResultsData'])->name('ajax.exam-results');
 Route::get('/ajax/classes', [HomeController::class, 'classes'])->name('ajax.classes');
 Route::get('/ajax/subjects', [HomeController::class, 'subjects'])->name('ajax.subjects');

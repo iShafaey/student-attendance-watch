@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('expenses_value', 10, 2)->default(0);
             $table->text('exam_result')->nullable();
             $table->string('phone_number');
-            $table->enum('status', ['pending', 'sent', 'failed'])->default('pending');
+            $table->enum('status', ['pending', 'sent', 'failed', 'blacklist'])->default('pending');
             $table->timestamps();
         });
     }

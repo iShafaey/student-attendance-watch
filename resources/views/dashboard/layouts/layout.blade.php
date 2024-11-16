@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="rtl" data-turbo="true">
+<html lang="en" dir="rtl" data-turbo="false">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

@@ -4,35 +4,61 @@
     <div class="row">
         @include('dashboard.layouts.sidebar')
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <div class="float-end">
-                        <h5>الطلاب</h5>
-                    </div>
-                    <div class="float-start">
-                        <div class="btn-group" role="group" aria-label="Basic example" dir="ltr">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new_student">اضف طالب جديد</button>
-                            <a href="{{ route('students.export') }}" class="btn btn-success" data-turbo="false" target="_self">تصدير بيانات الطلاب ك اكسل</a>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="float-end">
+                                <h5>الطلاب</h5>
+                            </div>
+                            <div class="float-start">
+                                <div class="btn-group" role="group" aria-label="Basic example" dir="ltr">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new_student">اضف طالب جديد</button>
+                                    <a href="{{ route('students.export') }}" class="btn btn-success" data-turbo="false" target="_self">تصدير بيانات الطلاب ك اكسل</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped dataTable" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>CLASS_ID</th>
+                                    <th>#</th>
+                                    <th>اسم الطالب</th>
+                                    <th>ولي الامر</th>
+                                    <th>العمر</th>
+                                    <th>الموبايل</th>
+                                    <th>الصف</th>
+                                    <th>المصاريف</th>
+                                    <th>تاريخ الانضمام</th>
+                                </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-striped dataTable" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>CLASS_ID</th>
-                            <th>#</th>
-                            <th>اسم الطالب</th>
-                            <th>ولي الامر</th>
-                            <th>العمر</th>
-                            <th>الموبايل</th>
-                            <th>الصف</th>
-                            <th>المصاريف</th>
-                            <th>تاريخ الانضمام</th>
-                        </tr>
-                        </thead>
-                    </table>
+                <div class="col-md-12 mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="float-end">
+                                <h5>القائمة السوداء</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped dataTableBlacklist" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>اسم الطالب</th>
+                                    <th>العمر</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>الصف</th>
+                                    <th>حذف من القائمة</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -165,7 +191,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
 
@@ -199,6 +224,29 @@
                     url: 'https://cdn.datatables.net/plug-ins/2.1.8/i18n/ar.json',
                 }
             });
+
+            var tableBlacklist = $('.dataTableBlacklist').DataTable({
+                ordering: false,
+                processing: true,
+                serverSide: true,
+                deferRender: true, // true to faster
+                stateSave: false,
+                ajax: '{{ route('ajax.students-blacklist') }}',
+                columns: [
+                    {data: 'student_name', name: 'student_name'},
+                    {data: 'age', name: 'age'},
+                    {data: 'phone_number', name: 'phone_number'},
+                    {data: 'class', name: 'class'},
+                    {data: 'actions', name: 'actions'},
+                ],
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.1.8/i18n/ar.json',
+                }
+            });
+
+            setInterval(function() {
+                tableBlacklist.ajax.reload(null, false);
+            }, 25000);
 
             $('.dataTable tbody').on('click', 'tr', function () {
                 console.log(table.row(this).data());
