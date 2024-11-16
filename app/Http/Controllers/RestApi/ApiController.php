@@ -13,7 +13,7 @@ use Response;
 class ApiController extends Controller
 {
     public function getNumbers() {
-        $student_attendance = StudentRecord::whereIn('status', ['pending'])->get();
+        $student_attendance = StudentRecord::whereIn('status', ['pending', 'failed'])->get();
         $contacts = StudentAttendanceResource::collection($student_attendance)->resolve();
 
         return Response::json([
