@@ -74,7 +74,7 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="student_code" class="form-label">كود الطالب</label>
-                                <input type="text" class="form-control" id="student_code" name="student_code" value="{{ GenerateRandomCode(6) }}" required>
+                                <input type="text" class="form-control" id="student_code" name="student_code" value="{{ GenerateRandomCode(7) }}" required>
                             </div>
                             <div class="mb-3">
                                 <label for="student_name" class="form-label">اسم الطالب</label>

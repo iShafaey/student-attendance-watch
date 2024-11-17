@@ -1,4 +1,6 @@
 <div wire:poll.5s>
+    @include('dashboard.layouts.message')
+
     <table class="table table-striped dataTable" style="width:100%">
         <thead>
         <tr>

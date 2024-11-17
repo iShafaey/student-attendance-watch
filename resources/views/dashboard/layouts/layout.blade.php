@@ -20,9 +20,10 @@
         }
 
         footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
+            /*position: fixed;*/
+            /*left: 0;*/
+            /*bottom: 0;*/
+            margin-top: 10px;
             width: 100%;
             text-align: center;
             padding: 1rem 0;

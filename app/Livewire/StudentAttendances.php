@@ -11,9 +11,9 @@ use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
-class StudentAttendances extends Component
-{
+class StudentAttendances extends Component {
     use LivewireAlert, WithPagination, WithoutUrlPagination;
+
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['scannerDetection'];
     public $tabActive = true;
@@ -42,8 +42,9 @@ class StudentAttendances extends Component
                     'status' => 'pending'
                 ]);
 
-                $this->alert('success', 'تم إنصراف الطالب بنجاح', [
-                    'toast' => true
+                $this->alert('success', "تم إنصراف الطالب <span class='text-primary'>{$student->fullName()}</span> بنجاح", [
+                    'toast' => true,
+                    'timer' => 30000,
                 ]);
             } else {
                 StudentRecord::create([
@@ -52,16 +53,18 @@ class StudentAttendances extends Component
                     'phone_number' => $student->country_code . $student->phone_number,
                 ]);
 
-                $this->alert('success', 'تم حضور الطالب بنجاح', [
-                    'toast' => true
+                $this->alert('success', "تم حضور الطالب <span class='text-primary'>{$student->fullName()}</span> بنجاح", [
+                    'toast' => true,
+                    'timer' => 30000,
                 ]);
             }
 
             $this->dispatch('run_beep_sound');
 
-        } catch (\Throwable $th){
+        } catch (\Throwable $th) {
             $this->alert('warning', 'لم يتم التعرف على الطالب', [
-                'toast' => true
+                'toast' => true,
+                'timer' => 30000,
             ]);
             $this->dispatch('run_err_sound');
         }
@@ -79,7 +82,7 @@ class StudentAttendances extends Component
     }
 
     public function getCounterInOut() {
-        $records = StudentRecord::where(function($query) {
+        $records = StudentRecord::where(function ($query) {
             $query->whereNotNull('attendance_in_datetime')
                 ->orWhereNotNull('attendance_out_datetime')
                 ->orWhereNotNull('absence_datetime');
@@ -96,8 +99,7 @@ class StudentAttendances extends Component
         $this->currentCount = ($this->attendanceCount - $this->departureCount);
     }
 
-    public function render()
-    {
+    public function render() {
         $this->getCounterInOut();
         $items = $this->attendances();
 

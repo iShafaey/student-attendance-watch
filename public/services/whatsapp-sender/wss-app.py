@@ -14,9 +14,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from colorama import Fore, Style, init
 
+title = "Student Attendance Watch"
+os.system(f'title {title}')
+
 # Initialize colorama
 init(autoreset=True)
-
 
 # Define print plus
 def print_plus(type, message, message_color):
@@ -25,7 +27,7 @@ def print_plus(type, message, message_color):
     # spaces = ' ' * (total_length - len(type))
 
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"{Style.DIM + Style.BRIGHT + Fore.WHITE}[{current_time}] "
+    print(f"{Style.DIM + Style.BRIGHT + Fore.WHITE}[{current_time}]"
           f"[{Style.BRIGHT + Fore.YELLOW}{type.ljust(8)}{Style.RESET_ALL}] "
           f"{message_color}{message}{Style.RESET_ALL}")
 
@@ -44,13 +46,13 @@ options.add_argument("--window-size=1200,800")
 options.add_argument("--window-position=0,0")
 
 # Init driver and welcome
-wait_time = 15;
+wait_time = 15
 nextCheck = 30
-text = "Student Attendance Watch"
-ascii_art = pyfiglet.figlet_format(text)
-print(ascii_art)
+base_dir = os.path.abspath(os.path.dirname(__file__))
 
-print_plus(type="WELCOME", message=f"{text}...", message_color=Style.DIM + Fore.CYAN)
+ascii_art = pyfiglet.figlet_format(title)
+print(ascii_art)
+print_plus(type="WELCOME", message=f"{title}...", message_color=Style.DIM + Fore.CYAN)
 print_plus(type="CONFIG", message=f"Driver: selenium", message_color=Style.DIM + Fore.CYAN)
 print_plus(type="CONFIG", message=f"Browser: Chrome", message_color=Style.DIM + Fore.CYAN)
 print_plus(type="CONFIG", message=f"Target service: Whatsapp", message_color=Style.DIM + Fore.CYAN)
@@ -65,15 +67,14 @@ print_plus(type="CONFIG", message=f"Driver service registration...", message_col
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
-print_plus(type="CONFIG", message=f"Driver service registered...", message_color=Style.DIM + Fore.GREEN)
+print_plus(type="CONFIG", message=f"Driver service registered!", message_color=Style.DIM + Fore.GREEN)
 
 # Define API URLs
 api_url = 'http://127.0.0.1:8000/api/v1.0/attendances/students/get-numbers'
 update_api_url = 'http://127.0.0.1:8000/api/v1.0/attendances/students/update-status'
 
-blacklist_file = "blacklist.txt"
-whitelist_file = "whitelist.txt"
-base_dir = os.path.abspath(os.path.dirname(__file__))
+blacklist_file = "src/public/services/whatsapp-sender/blacklist.txt"
+whitelist_file = "src/public/services/whatsapp-sender/whitelist.txt"
 blacklist_path = os.path.join(base_dir, blacklist_file)
 whitelist_path = os.path.join(base_dir, whitelist_file)
 
@@ -287,7 +288,7 @@ def send_whatsapp_message(phone_number, message):
         return True
 
     except Exception as e:
-        print_plus(type="DEBUG", message=f"Failed to send message: {type(e).__name__}", message_color=Fore.RED)
+        print_plus(type="DEBUG", message=f"Failed to send message: {e}", message_color=Fore.RED)
         return False
 
 
@@ -300,7 +301,7 @@ while True:
         if response.status_code == 200:
             data = response.json()
             contacts_res = data.get('contacts', [])
-            blacklist = load_blacklist(blacklist_path)
+            blacklist = load_blacklist(blacklist_file)
             filtered_contacts = filter_contacts(contacts_res, blacklist)
             contacts = data['contacts'] = filtered_contacts
             if not contacts:
@@ -331,9 +332,12 @@ while True:
                 if send_whatsapp_message(phone_number, message):
                     sent_count += 1
                     remaining_count = total_contacts - sent_count
+                    remaining_message = f"Message sent to {phone_number} - Sent: {sent_count}, Remaining: {remaining_count}"
                     print_plus(type="WHATSAPP",
-                               message=f"Message sent to {phone_number} - Sent: {sent_count}, Remaining: {remaining_count}",
+                               message=remaining_message,
                                message_color=Fore.GREEN)
+
+                    os.system(f'title {title} • Sent: {sent_count}, Remaining: {remaining_count}')
 
                     # Update the status in the API after successful sending
                     if update_status(phone_number, 'message_sent', msg_type):

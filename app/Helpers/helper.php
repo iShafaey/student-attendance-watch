@@ -15,7 +15,7 @@ function GenerateRandomCode($length = 5, $type = 'number', $uppercase = true, $p
         if ($uppercase) {
             return strtoupper($return);
         } else {
-            return $return;
+            return replacePrefixZero($return);
         }
     }
 }
@@ -32,4 +32,12 @@ function ConvertArrayToText($data) {
     }
 
     return implode('، ', $result);
+}
+
+function replacePrefixZero($phoneNumber) {
+    if (substr($phoneNumber, 0, 1) === "0") {
+        $randomNumber = rand(1, 9);
+        $phoneNumber = $randomNumber . substr($phoneNumber, 1);
+    }
+    return $phoneNumber;
 }
