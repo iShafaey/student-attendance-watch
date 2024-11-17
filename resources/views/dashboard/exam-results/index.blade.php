@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         @include('dashboard.layouts.sidebar')
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="card">
                 <div class="card-header">
                     <div class="float-end">
