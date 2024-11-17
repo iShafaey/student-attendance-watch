@@ -87,6 +87,10 @@ User-friendly interface for adding student data, including:
    ```bash
    composer install
    ```
+2. Configure database then run this command:
+   ```bash
+   php artisan migrate
+   ```
 2. Start the server with:
    ```bash
    php artisan serve
