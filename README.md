@@ -91,8 +91,6 @@ User-friendly interface for adding student data, including:
    ```bash
    php artisan migrate
    ```
-   
-   ```
 2. Start the server with:
    ```bash
    php artisan serve
