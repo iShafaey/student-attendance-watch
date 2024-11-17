@@ -86,6 +86,34 @@ def load_blacklist(file_path):
         return set(line.strip() for line in f if line.strip())
 
 
+# Check if the phone number is shorter than 9 digits and add to blacklist.
+def is_short_number(phone_number):
+    # Ensure the blacklist file exists
+    if not os.path.exists(blacklist_file):
+        with open(blacklist_file, "w") as f:
+            pass  # Create the file if it doesn't exist
+
+    # Read the blacklist to check if the number is already in it
+    with open(blacklist_file, "r") as f:
+        blacklist = f.read().splitlines()
+
+    # If the number is already in the blacklist, do nothing
+    if phone_number in blacklist:
+        print_plus(type="SYSTEM", message=f"Number {phone_number} is already in the blacklist.",
+                   message_color=Fore.RED)
+        return False  # The number is already in the blacklist
+
+    # If the number is short, add it to the blacklist
+    if len(phone_number) < 9:
+        with open(blacklist_file, "a") as f:
+            f.write(phone_number + "\n")
+        print_plus(type="SYSTEM", message=f"Number {phone_number} is too short and has been added to the blacklist.",
+                   message_color=Fore.RED)
+        return True  # The number was added to the blacklist
+
+    return False  # The number is not short, so nothing was done
+
+
 # Check if the phone number is in the blacklist file
 def check_blacklist(phone_number):
     # Ensure the blacklist file exists
@@ -193,7 +221,7 @@ def check_whatsapp_number(driver, phone_number, message):
             return True
 
     except Exception as e:
-        print_plus(type="SYSTEM", message=f"An error occurred: {type(e).__name__}", message_color=Fore.RED)
+        print_plus(type="DEBUG", message=f"An error occurred: {type(e).__name__}", message_color=Fore.RED)
         return False
 
 
@@ -224,7 +252,6 @@ def update_status(phone_number, status, msg_type):
 
 # Function to send a message via WhatsApp Web
 def send_whatsapp_message(phone_number, message):
-    print_plus(type="SYSTEM", message=f"Started sending message to {phone_number}", message_color=Fore.CYAN)
     try:
         # Open the link with the phone number
         whatsapp_url = f"https://web.whatsapp.com/send?phone={phone_number}&text={message}"
@@ -237,6 +264,7 @@ def send_whatsapp_message(phone_number, message):
         if check_whatsapp_number(driver, phone_number, message) == False:
             return False
 
+        print_plus(type="SYSTEM", message=f"Started sending message to {phone_number}", message_color=Fore.CYAN)
         try:
             # Try the primary method
             # message_box = driver.find_element(By.XPATH,'//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p')
@@ -252,14 +280,14 @@ def send_whatsapp_message(phone_number, message):
                 time.sleep(1)
                 message_box.send_keys(Keys.ENTER)
             except Exception as secondary_error:
-                print_plus(type="SYSTEM", message=f"Alternative method also failed: {type(secondary_error).__name__}",
+                print_plus(type="DEBUG", message=f"Alternative method also failed: {type(secondary_error).__name__}",
                            message_color=Fore.RED)
                 return False
 
         return True
 
     except Exception as e:
-        print_plus(type="SYSTEM", message=f"Failed to send message: {type(e).__name__}", message_color=Fore.RED)
+        print_plus(type="DEBUG", message=f"Failed to send message: {type(e).__name__}", message_color=Fore.RED)
         return False
 
 
@@ -292,6 +320,8 @@ while True:
                 name = contact.get('name')
                 message = contact.get('message')
                 msg_type = contact.get('type')  # Update to use 'msg_type' instead of 'type'
+
+                if is_short_number(phone_number): continue
 
                 if check_number_at_blacklist(phone_number):
                     print_plus(type="SYSTEM", message=f"Number {phone_number} was skipped because it was blacklisted.",
@@ -334,7 +364,7 @@ while True:
             print_plus(type="SYSTEM", message=f"Failed to retrieve phone numbers", message_color=Fore.RED)
 
     except Exception as e:
-        print_plus(type="SYSTEM", message=f"Error occurred: {type(e).__name__}", message_color=Fore.RED)
+        print_plus(type="DEBUG", message=f"Error occurred: {type(e).__name__}", message_color=Fore.RED)
 
     # Wait before checking again
     print_plus(type="SYSTEM", message=f"Waiting for {nextCheck} seconds before fetching new messages...",
