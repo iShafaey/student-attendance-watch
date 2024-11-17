@@ -6,3 +6,4 @@ python-barcode
 Pillow
 unidecode
 colorama
+pyfiglet

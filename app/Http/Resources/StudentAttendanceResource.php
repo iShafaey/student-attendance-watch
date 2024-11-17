@@ -53,7 +53,8 @@ class StudentAttendanceResource extends JsonResource
             'phone_number' => $this->phone_number,
             'name' => $name,
             'message' => $message,
-            'type' => $type
+            'type' => $type,
+            'status' => $this->status
         ];
     }
 }
