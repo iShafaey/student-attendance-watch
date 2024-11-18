@@ -25,13 +25,13 @@
                     </td>
                 @else
                     <td dir="ltr">
-                        <span class="badge bg-primary">{{ $item?->attendance_in_datetime->format('H:i A') ?? "[غير معروف]" }}</span>
+                        <span class="badge bg-primary">{{ $item?->attendance_in_datetime?->format('H:i A') ?? "[غير معروف]" }}</span>
                     </td>
                     <td dir="ltr">
-                        <span class="badge bg-dark">{{ $item?->attendance_out_datetime ? $item?->attendance_out_datetime->format('H:i A') ?? "[غير معروف]" : "في الانتظار" }}</span>
+                        <span class="badge bg-dark">{{ $item?->attendance_out_datetime ? $item?->attendance_out_datetime?->format('H:i A') ?? "[غير معروف]" : "في الانتظار" }}</span>
                     </td>
                 @endif
-                <td>{{ $item?->created_at->format('Y-m-d') ?? "[غير معروف]" }}</td>
+                <td>{{ $item?->created_at?->format('Y-m-d') ?? "[غير معروف]" }}</td>
                 <td>
                     @if($item->status == 'pending')
                         <lable class="badge bg-warning">في الانتظار</lable>
