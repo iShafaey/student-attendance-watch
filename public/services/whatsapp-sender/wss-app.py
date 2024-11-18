@@ -12,6 +12,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 from colorama import Fore, Style, init
 
 title = "Student Attendance Watch"
@@ -46,7 +49,7 @@ options.add_argument("--window-size=1200,800")
 options.add_argument("--window-position=0,0")
 
 # Init driver and welcome
-wait_time = 15
+wait_time = 20
 nextCheck = 30
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -100,16 +103,14 @@ def is_short_number(phone_number):
 
     # If the number is already in the blacklist, do nothing
     if phone_number in blacklist:
-        print_plus(type="SYSTEM", message=f"Number {phone_number} is already in the blacklist.",
-                   message_color=Fore.RED)
+        print_plus(type="SYSTEM", message=f"Number {phone_number} is already in the blacklist.", message_color=Fore.RED)
         return False  # The number is already in the blacklist
 
     # If the number is short, add it to the blacklist
     if len(phone_number) < 9:
         with open(blacklist_file, "a") as f:
             f.write(phone_number + "\n")
-        print_plus(type="SYSTEM", message=f"Number {phone_number} is too short and has been added to the blacklist.",
-                   message_color=Fore.RED)
+        print_plus(type="SYSTEM", message=f"Number {phone_number} is too short and has been added to the blacklist.", message_color=Fore.RED)
         return True  # The number was added to the blacklist
 
     return False  # The number is not short, so nothing was done
@@ -128,15 +129,13 @@ def check_blacklist(phone_number):
 
     # Check if the number is in the blacklist
     if phone_number in blacklist:
-        print_plus(type="SYSTEM", message=f"Number {phone_number} is already in the blacklist.",
-                   message_color=Fore.RED)
+        print_plus(type="SYSTEM", message=f"Number {phone_number} is already in the blacklist.", message_color=Fore.RED)
         return True
 
     # Add the number to the blacklist
     with open(blacklist_file, "a") as f:
         f.write(phone_number + "\n")
-    print_plus(type="SYSTEM", message=f"Number {phone_number} has been added to the blacklist.",
-               message_color=Fore.RED)
+    print_plus(type="SYSTEM", message=f"Number {phone_number} has been added to the blacklist.", message_color=Fore.RED)
     return False
 
 
@@ -162,15 +161,13 @@ def check_whitelist(phone_number):
 
     # Check if the number is in the whitelist
     if phone_number in whitelist:
-        print_plus(type="SYSTEM", message=f"Number {phone_number} is already in the whitelist.",
-                   message_color=Fore.GREEN)
+        print_plus(type="SYSTEM", message=f"Number {phone_number} is already in the whitelist.", message_color=Fore.GREEN)
         return True
 
     # Add the number to the whitelist
     with open(whitelist_file, "a") as f:
         f.write(phone_number + "\n")
-    print_plus(type="SYSTEM", message=f"Number {phone_number} has been added to the whitelist.",
-               message_color=Fore.GREEN)
+    print_plus(type="SYSTEM", message=f"Number {phone_number} has been added to the whitelist.", message_color=Fore.GREEN)
     return False
 
 
@@ -195,29 +192,27 @@ def filter_contacts(contacts, blacklist):
 def check_whatsapp_number(driver, phone_number, message):
     if check_number_at_whitelist(phone_number): return True
 
-    print_plus(type="SYSTEM", message=f"Checking Number {phone_number} is registered on WhatsApp or not...",
-               message_color=Fore.CYAN)
+    print_plus(type="SYSTEM", message=f"Checking Number {phone_number} is registered on WhatsApp or not...", message_color=Fore.CYAN)
 
     try:
         # Open the WhatsApp Web URL with the phone number
         whatsapp_url = f"https://web.whatsapp.com/send?phone={phone_number}&text={message}"
         driver.get(whatsapp_url)
 
-        time.sleep(wait_time)  # Wait for WhatsApp Web to process the request
-
         try:
             # Check for error message indicating the number is not on WhatsApp
-            error_message = driver.find_element(By.XPATH,
-                                                '//div[contains(text(), "Phone number shared via url is invalid.")]')
-            print_plus(type="WHATSAPP", message=f"Number {phone_number} is not registered on WhatsApp.",
-                       message_color=Fore.RED)
+            # error_message = driver.find_element(By.XPATH, '//div[contains(text(), "Phone number shared via url is invalid.")]')
+            wait = WebDriverWait(driver, wait_time)
+            error_message = wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(), "Phone number shared via url is invalid.")]')))
+
+            print_plus(type="WHATSAPP", message=f"Number {phone_number} is not registered on WhatsApp.", message_color=Fore.RED)
+            print_plus(type="WHATSAPP", message=error_message.text, message_color=Fore.RED)
             # Add the number to the blacklist
             check_blacklist(phone_number)
             return False
         except NoSuchElementException:
             # If the error message is not found, the number is on WhatsApp
-            print_plus(type="WHATSAPP", message=f"Number {phone_number} is registered on WhatsApp.",
-                       message_color=Fore.GREEN)
+            print_plus(type="WHATSAPP", message=f"Number {phone_number} is registered on WhatsApp.", message_color=Fore.GREEN)
             check_whitelist(phone_number)
             return True
 
@@ -257,7 +252,8 @@ def send_whatsapp_message(phone_number, message):
         # Open the link with the phone number
         whatsapp_url = f"https://web.whatsapp.com/send?phone={phone_number}&text={message}"
         driver.get(whatsapp_url)
-        time.sleep(5)
+        # time.sleep(wait_time)
+
         # Hide and resize the browser window
         driver.set_window_position(10000, 10000)
         driver.set_window_size(400, 400)
@@ -268,17 +264,14 @@ def send_whatsapp_message(phone_number, message):
         print_plus(type="SYSTEM", message=f"Started sending message to {phone_number}", message_color=Fore.CYAN)
         try:
             # Try the primary method
-            # message_box = driver.find_element(By.XPATH,'//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p')
-            send_button = driver.find_element(By.XPATH,
-                                              '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[2]/button')
-            time.sleep(1)
+            wait = WebDriverWait(driver, wait_time)
+            send_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[2]/button')))
             send_button.click()
         except Exception as primary_error:
             # If the primary method fails, try the alternative method
             try:
-                message_box = driver.find_element(By.XPATH,
-                                                  '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p')
-                time.sleep(1)
+                wait = WebDriverWait(driver, wait_time)
+                message_box = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]/p')))
                 message_box.send_keys(Keys.ENTER)
             except Exception as secondary_error:
                 print_plus(type="DEBUG", message=f"Alternative method also failed: {type(secondary_error).__name__}",
@@ -305,15 +298,13 @@ while True:
             filtered_contacts = filter_contacts(contacts_res, blacklist)
             contacts = data['contacts'] = filtered_contacts
             if not contacts:
-                print_plus(type="SYSTEM", message=f"No new messages to fetch.",
-                           message_color=Fore.MAGENTA + Style.BRIGHT)
+                print_plus(type="SYSTEM", message=f"No new messages to fetch.", message_color=Fore.MAGENTA + Style.BRIGHT)
 
             total_contacts = len(contacts)
             sent_count = 0
 
             if total_contacts:
-                print_plus(type="SYSTEM", message=f"Found {total_contacts} new messages.",
-                           message_color=Fore.GREEN + Style.BRIGHT)
+                print_plus(type="SYSTEM", message=f"Found {total_contacts} new messages.", message_color=Fore.GREEN + Style.BRIGHT)
 
             # Iterate over the numbers and send messages
             for contact in contacts:
@@ -325,44 +316,34 @@ while True:
                 if is_short_number(phone_number): continue
 
                 if check_number_at_blacklist(phone_number):
-                    print_plus(type="SYSTEM", message=f"Number {phone_number} was skipped because it was blacklisted.",
-                               message_color=Style.DIM + Fore.RED)
+                    print_plus(type="SYSTEM", message=f"Number {phone_number} was skipped because it was blacklisted.", message_color=Style.DIM + Fore.RED)
                     continue
 
                 if send_whatsapp_message(phone_number, message):
                     sent_count += 1
                     remaining_count = total_contacts - sent_count
                     remaining_message = f"Message sent to {phone_number} - Sent: {sent_count}, Remaining: {remaining_count}"
-                    print_plus(type="WHATSAPP",
-                               message=remaining_message,
-                               message_color=Fore.GREEN)
+                    print_plus(type="WHATSAPP", message=remaining_message, message_color=Fore.GREEN)
 
                     os.system(f'title {title} • Sent: {sent_count}, Remaining: {remaining_count}')
 
                     # Update the status in the API after successful sending
                     if update_status(phone_number, 'message_sent', msg_type):
-                        print_plus(type="SYSTEM", message=f"Status updated for {phone_number} (message sent)",
-                                   message_color=Fore.MAGENTA + Style.BRIGHT)
+                        print_plus(type="SYSTEM", message=f"Status updated for {phone_number} (message sent)", message_color=Fore.MAGENTA + Style.BRIGHT)
                     else:
-                        print_plus(type="SYSTEM", message=f"Failed to update status for {phone_number}",
-                                   message_color=Fore.RED)
+                        print_plus(type="SYSTEM", message=f"Failed to update status for {phone_number}", message_color=Fore.RED)
                 else:
-                    print_plus(type="WHATSAPP", message=f"Failed to send message to {phone_number}",
-                               message_color=Fore.RED)
+                    print_plus(type="WHATSAPP", message=f"Failed to send message to {phone_number}", message_color=Fore.RED)
 
                     # Update the status in the API after failed sending
                     if update_status(phone_number, 'message_failed', msg_type):
-                        print_plus(type="SYSTEM", message=f"Status updated for {phone_number} (message failed)",
-                                   message_color=Fore.MAGENTA + Style.BRIGHT)
+                        print_plus(type="SYSTEM", message=f"Status updated for {phone_number} (message failed)", message_color=Fore.MAGENTA + Style.BRIGHT)
                     else:
-                        print_plus(type="SYSTEM", message=f"Failed to update failure status for {phone_number}",
-                                   message_color=Fore.RED)
+                        print_plus(type="SYSTEM", message=f"Failed to update failure status for {phone_number}", message_color=Fore.RED)
 
                 # Add a safe wait time between messages
                 wait_time = random.randint(int(data.get('delay_min')), int(data.get('delay_max')))  # Random delay
-                print_plus(type="SYSTEM",
-                           message=f"Waiting for {wait_time} seconds before sending the next message...",
-                           message_color=Fore.YELLOW)
+                print_plus(type="SYSTEM", message=f"Waiting for {wait_time} seconds before sending the next message...", message_color=Fore.YELLOW)
                 time.sleep(wait_time)  # Wait before sending the next message
         else:
             print_plus(type="SYSTEM", message=f"Failed to retrieve phone numbers", message_color=Fore.RED)
@@ -371,6 +352,6 @@ while True:
         print_plus(type="DEBUG", message=f"Error occurred: {type(e).__name__}", message_color=Fore.RED)
 
     # Wait before checking again
-    print_plus(type="SYSTEM", message=f"Waiting for {nextCheck} seconds before fetching new messages...",
-               message_color=Fore.YELLOW)
+    os.system(f'title {title}')
+    print_plus(type="SYSTEM", message=f"Waiting for {nextCheck} seconds before fetching new messages...", message_color=Fore.YELLOW)
     time.sleep(nextCheck)
