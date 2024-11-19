@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from colorama import Fore, Style, init
 
 title = "Student Attendance Watch"
@@ -202,14 +203,19 @@ def check_whatsapp_number(driver, phone_number, message):
             wait = WebDriverWait(driver, wait_time)
             error_message = wait.until(EC.presence_of_element_located((By.XPATH, '//div[contains(text(), "Phone number shared via url is invalid.")]')))
 
-            print_plus(type="WHATSAPP", message=f"Number {phone_number} is not registered on WhatsApp.", message_color=Fore.RED)
-            print_plus(type="WHATSAPP", message=error_message.text, message_color=Fore.RED)
+            if error_message:
+                print_plus(type="WHATSAPP", message=f"Number {phone_number} is not registered on WhatsApp.", message_color=Fore.RED)
+                print_plus(type="WHATSAPP", message=error_message.text, message_color=Fore.RED)
 
-            # Add the number to the blacklist
-            check_blacklist(phone_number)
-            return False
-        except NoSuchElementException:
-            # If the error message is not found, the number is on WhatsApp
+                # Add the number to the blacklist
+                check_blacklist(phone_number)
+                return False
+            else:
+                print_plus(type="WHATSAPP", message=f"Number {phone_number} is registered on WhatsApp.", message_color=Fore.GREEN)
+                check_whitelist(phone_number)
+                return True
+
+        except TimeoutException:  # Handle case where error message is not found within wait time
             print_plus(type="WHATSAPP", message=f"Number {phone_number} is registered on WhatsApp.", message_color=Fore.GREEN)
             check_whitelist(phone_number)
             return True
@@ -217,7 +223,6 @@ def check_whatsapp_number(driver, phone_number, message):
     except Exception as e:
         print_plus(type="DEBUG", message=f"An error occurred: {type(e).__name__}", message_color=Fore.RED)
         return False
-
 
 # Function to update the status after sending the message successfully or failing
 def update_status(phone_number, status, msg_type):
@@ -253,7 +258,7 @@ def send_whatsapp_message(phone_number, message):
 
         # Hide and resize the browser window
         driver.set_window_position(10000, 10000)
-        driver.set_window_size(400, 400)
+        driver.set_window_size(800, 800)
 
         if check_whatsapp_number(driver, phone_number, message) == False:
             return False
