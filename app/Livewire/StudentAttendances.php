@@ -116,12 +116,19 @@ class StudentAttendances extends Component {
 
     public function getCounterInOut() {
         $records = StudentRecord::query()->whereIn('student_id', $this->classesFiltered)
-            ->where(function ($query) {
-                $query->whereNotNull('attendance_in_datetime')
-                    ->orWhereNotNull('attendance_out_datetime')
-                    ->orWhereNotNull('absence_datetime');
-            })
             ->whereBetween('updated_at', $this->currentDates)
+            ->when(!in_array($this->filter, [
+                'attendance_current',
+                'attendance_in_datetime',
+                'attendance_out_datetime',
+                'absence_datetime'
+            ]), function ($query) {
+                return $query->where(function ($query) {
+                    $query->whereNotNull('attendance_in_datetime')
+                        ->orWhereNotNull('attendance_out_datetime')
+                        ->orWhereNotNull('absence_datetime');
+                });
+            })
             ->get();
 
         $this->attendanceCount = $records->whereNotNull('attendance_in_datetime')->count();
