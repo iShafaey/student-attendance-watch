@@ -13,8 +13,15 @@
                             </div>
                             <div class="float-start">
                                 <div class="btn-group" role="group" aria-label="Basic example" dir="ltr">
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new_student">اضف طالب جديد</button>
-                                    <a href="{{ route('students.export') }}" class="btn btn-success" data-turbo="false" target="_self">تصدير بيانات الطلاب ك اكسل</a>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new_student">
+                                        اضف طالب جديد
+                                    </button>
+                                    <a href="{{ route('students.export') }}" class="btn btn-dark" data-turbo="false" target="_self">تصدير الجميع</a>
+                                    <button type="button" onclick="$('.stdExport').submit();" class="btn btn-outline-dark exportSelectedBtn" data-turbo="false" target="_self">تصدير المحدد</button>
+                                    <form class="stdExport" method="post" action="{{ route('students.export') }}">
+                                        @csrf
+                                        <input class="studentsIds" type="hidden" name="students" value="">
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -22,6 +29,7 @@
                             <table class="table table-striped dataTable" style="width:100%">
                                 <thead>
                                 <tr>
+                                    <th>تحديد</th>
                                     <th>ID</th>
                                     <th>CLASS_ID</th>
                                     <th>#</th>
@@ -154,7 +162,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="_class" class="form-label">الصف الدراسي</label>
-{{--                                <input type="text" class="form-control" id="_class" name="class" required>--}}
+                                {{--                                <input type="text" class="form-control" id="_class" name="class" required>--}}
                                 <select name="class" class="form-control select-plus" id="_class" required>
                                     @forelse($classes as $class)
                                         <option value="{{ $class->id }}">{{ $class->title }}</option>
@@ -209,6 +217,7 @@
                 stateSave: false,
                 ajax: '{{ route('ajax.students') }}',
                 columns: [
+                    {data: 'checkStudent', name: 'checkStudent'},
                     {data: 'id', name: 'id', visible: false},
                     {data: 'class_id', name: 'class_id', visible: false},
                     {data: 'student_id', name: 'student_id'},
@@ -244,11 +253,15 @@
                 }
             });
 
-            setInterval(function() {
+            setInterval(function () {
                 tableBlacklist.ajax.reload(null, false);
             }, 25000);
 
             $('.dataTable tbody').on('click', 'tr', function () {
+                if ($(event.target).closest('td:first-child').find('input.form-check-input').is(event.target)) {
+                    return;
+                }
+
                 console.log(table.row(this).data());
                 var data = table.row(this).data();
 
@@ -264,6 +277,27 @@
                 $('#_join_date').val(data.join_date);
 
                 $('#edit_student').modal('show');
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.dataTable').on('change', 'input[name="check[]"]', function () {
+                var selectedValues = $('.dataTable input[name="check[]"]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                var selectedCount = $('.dataTable input[name="check[]"]:checked').length;
+
+                $('.studentsIds').val(selectedValues.join(','));
+
+                if (selectedCount > 0) {
+                    var text = selectedCount === 1 ? 'تصدير طالب' : 'تصدير ' + selectedCount + ' طلاب';
+                    $('.exportSelectedBtn').text(text);
+                } else {
+                    $('.exportSelectedBtn').text('تصدير المحدد');
+                }
+
             });
         });
     </script>

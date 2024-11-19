@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\HomeController;
+use App\Http\Controllers\Dashboard\ReportConstoller;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/clear-cache', function () {
@@ -23,7 +24,7 @@ Route::post('/students/new', [HomeController::class, 'newStudent'])->name('new.s
 Route::post('/students/update', [HomeController::class, 'updateStudent'])->name('update.student');
 Route::post('/students/delete', [HomeController::class, 'deleteStudent'])->name('student.delete');
 Route::post('/students/new-expenses', [HomeController::class, 'studentNewExpenses'])->name('students.new-expenses');
-Route::get('/students/export', [HomeController::class, 'studentExport'])->name('students.export');
+Route::any('/students/export', [HomeController::class, 'studentExport'])->name('students.export');
 Route::post('/students/new-exam-results', [HomeController::class, 'newExamResults'])->name('students.new-exam-results');
 Route::post('/students/delete-exam-results', [HomeController::class, 'deleteExamResults'])->name('students.delete-exam-results');
 Route::post('/students/delete-expenses', [HomeController::class, 'deleteExpenses'])->name('students.delete-expenses');
@@ -41,3 +42,10 @@ Route::post('/settings/remove-class', [HomeController::class, 'removeClass'])->n
 Route::post('/settings/new-subject', [HomeController::class, 'newSubject'])->name('settings.new-subject');
 Route::post('/settings/update-subject', [HomeController::class, 'updateSubject'])->name('settings.update-subject');
 Route::post('/settings/remove-subject', [HomeController::class, 'removeSubject'])->name('settings.remove-subject');
+Route::get('/reports', [ReportConstoller::class, 'index'])->name('reports.index');
+Route::get('/reports/students', [ReportConstoller::class, 'students'])->name('reports.students');
+Route::get('/reports/finances', [ReportConstoller::class, 'finances'])->name('reports.finance');
+Route::get('/general-expenses', [HomeController::class, 'generalExpenses'])->name('general-expenses.index');
+Route::get('/ajax/general-expenses', [HomeController::class, 'generalExpensesData'])->name('general-expenses.ajax');
+Route::post('/general-expenses/store', [HomeController::class, 'newGeneralExpenses'])->name('general-expenses.store');
+Route::post('/general-expenses/remove', [HomeController::class, 'removeGeneralExpenses'])->name('general-expenses.remove');

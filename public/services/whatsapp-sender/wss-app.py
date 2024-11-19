@@ -1,7 +1,6 @@
 import os
 import time
 import random
-
 import pyfiglet
 import requests
 from datetime import datetime
@@ -14,7 +13,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from colorama import Fore, Style, init
 
 title = "Student Attendance Watch"

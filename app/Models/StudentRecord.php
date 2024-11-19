@@ -14,11 +14,13 @@ class StudentRecord extends Model
         'attendance_in_datetime' => 'datetime',
         'attendance_out_datetime' => 'datetime',
         'absence_datetime' => 'datetime',
+        'expenses_datetime' => 'datetime',
+        'expenses_reminder_datetime' => 'datetime',
+        'exam_result_datetime' => 'datetime',
     ];
 
     protected $fillable = [
         'student_id',
-        'attendance_datetime',
         'expenses_datetime',
         'exam_result_datetime',
         'expenses_value',

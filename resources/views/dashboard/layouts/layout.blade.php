@@ -74,17 +74,20 @@
         td {
             cursor: pointer;
         }
+        .h-150{
+            height: 150px;
+        }
     </style>
     @livewireStyles
 </head>
 <body>
 <div>
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         @yield('content')
     </div>
 </div>
 <footer>
-    <div class="container">
+    <div class="container mt-5">
         <p class="m-0 text-muted">Copyright © Student Attendance Watch {{ date('Y') }} | Made with
             <i class="text-danger h5">♥</i> by
             <a class="text-dark" target="_blank" href="https://github.com/iShafaey">Ahmed Elshafie</a>
@@ -105,8 +108,19 @@
         })
 
         $('.select-plus-tags').each(function() {
-            $(this).select2({tags: true, dropdownParent: $(this).parent()});
-        })
+            const maxTags = $(this).data('tag-max') || 10;
+
+            $(this).select2({
+                tags: true,
+                dropdownParent: $(this).parent()
+            }).on('change', function(e) {
+                const selectedOptions = $(this).val() || [];
+                if (selectedOptions.length > maxTags) {
+                    selectedOptions.pop();
+                    $(this).val(selectedOptions).trigger('change');
+                }
+            });
+        });
 
         // $('body').on('shown.bs.modal', '.modal', function () {
         //     $(this).find('.select-plus').each(function () {

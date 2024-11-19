@@ -3,17 +3,19 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Finance;
 use App\Models\Student;
 use App\Models\StudentClass;
 use App\Models\StudentRecord;
 use App\Models\StudentSubject;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
-use function Symfony\Component\Translation\t;
 
 class HomeController extends Controller {
     public function index() {
@@ -72,7 +74,10 @@ class HomeController extends Controller {
             ->addColumn('student_id', function ($value) {
                 return $value->id . " ({$value->student_code})";
             })
-            ->rawColumns(['student_name'])
+            ->addColumn('checkStudent', function ($value) {
+                return '<input type="checkbox" name="check[]" class="form-check-input" value="' . $value->id . '" />';
+            })
+            ->rawColumns(['student_name', 'checkStudent'])
             ->make(true);
     }
 
@@ -186,9 +191,21 @@ class HomeController extends Controller {
         return redirect()->back()->with('success', 'تم تحديث بيانات الطالب بنجاح');
     }
 
-    public function studentExport() {
-        // Generateing Students List
-        $students = Student::select(['student_code', 'student_name', 'father_name', 'class', 'join_date'])->get();
+    public function studentExport(Request $request) {
+        $studentsId = collect(explode(',', $request->students))->filter()->toArray();
+
+        $checkEmptySelected = $request->has('students') && count($studentsId) < 1;
+
+        if ($checkEmptySelected) {
+            return redirect()->back()->with('info', 'يرجى اختيار على الاقل طالبا');
+        }
+
+        $students = Student::select(['student_code', 'student_name', 'father_name', 'class', 'join_date'])
+            ->when(!$checkEmptySelected && $request->has('students'), function (Builder $query) use ($studentsId) {
+                $query->whereIn('id', $studentsId);
+            })
+            ->get();
+
         $students_list = collect($students)->map(function ($student) {
             return [
                 'student_code' => $student->student_code,
@@ -389,7 +406,7 @@ class HomeController extends Controller {
                 return $value->id . " ({$value->student_code})";
             })
             ->addColumn('actions', function ($value) {
-                return '<a href="'.route('ajax.students-blacklist.remove-phone-number', [$value->country_code . $value->phone_number]).'" class="btn btn-sm btn-danger">حذف</a>';
+                return '<a href="' . route('ajax.students-blacklist.remove-phone-number', [$value->country_code . $value->phone_number]) . '" class="btn btn-sm btn-danger">حذف</a>';
             })
             ->rawColumns(['student_name', 'actions'])
             ->make(true);
@@ -402,7 +419,7 @@ class HomeController extends Controller {
         if (File::exists($filePath)) {
             $blacklist = File::lines($filePath)->toArray();
 
-            $blacklist = array_filter($blacklist, function($line) use ($numberToRemove) {
+            $blacklist = array_filter($blacklist, function ($line) use ($numberToRemove) {
                 return $line !== $numberToRemove;
             });
 
@@ -412,5 +429,44 @@ class HomeController extends Controller {
         } else {
             return redirect()->back()->with('danger', 'لا يوجد ملف يحتوي عل القائمة السوداء');
         }
+    }
+
+    public function generalExpensesData() {
+        $data = Finance::get();
+        return Datatables::of($data)
+            ->editColumn('date', function ($value) {
+                return Carbon::parse($value?->date)->format('Y-m-d');
+            })
+            ->rawColumns(['date'])
+            ->make(true);
+    }
+
+    public function generalExpenses() {
+        $types = Cache::get('types', []);
+        $creditors = Cache::get('creditors', []);
+
+        return view('dashboard.general-expenses.general-expenses', [
+            'types' => $types,
+            'creditors' => $creditors
+        ]);
+    }
+
+    public function newGeneralExpenses(Request $request) {
+        $old_types = Cache::get('types');
+        $merged_types = collect($old_types)->merge([$request->type])->filter()->toArray();
+        Cache::put('types', $merged_types);
+
+        $old_creditors = Cache::get('creditors');
+        $merged_creditors = collect($old_creditors)->merge([$request->creditor])->filter()->toArray();
+        Cache::put('creditors', $merged_creditors);
+
+        Finance::create($request->all());
+
+        return redirect()->back()->with('success', 'تم إضافه المعاملة المالية بنجاح');
+    }
+
+    public function removeGeneralExpenses(Request $request) {
+        Finance::find($request->id)->delete();
+        return redirect()->back()->with('success', 'تم حذف المعاملة بنجاح');
     }
 }
