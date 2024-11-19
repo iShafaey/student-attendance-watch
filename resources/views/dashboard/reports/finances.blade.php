@@ -126,7 +126,7 @@
                                             <td>{{ $finance->type }}</td>
                                             <td>{{ $finance->amount }}</td>
                                             <td>{{ $finance->creditor }}</td>
-                                            <td>{{ $finance->date }}</td>
+                                            <td>{{ $finance->date->format('Y-m-d') }}</td>
                                         </tr>
                                     @empty
                                     @endforelse

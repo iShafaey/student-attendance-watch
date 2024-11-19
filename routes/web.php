@@ -42,6 +42,7 @@ Route::post('/settings/remove-class', [HomeController::class, 'removeClass'])->n
 Route::post('/settings/new-subject', [HomeController::class, 'newSubject'])->name('settings.new-subject');
 Route::post('/settings/update-subject', [HomeController::class, 'updateSubject'])->name('settings.update-subject');
 Route::post('/settings/remove-subject', [HomeController::class, 'removeSubject'])->name('settings.remove-subject');
+Route::post('/settings/attendance-rule/update', [HomeController::class, 'attendanceRole'])->name('attendance-rule.update');
 Route::get('/reports', [ReportConstoller::class, 'index'])->name('reports.index');
 Route::get('/reports/students', [ReportConstoller::class, 'students'])->name('reports.students');
 Route::get('/reports/finances', [ReportConstoller::class, 'finances'])->name('reports.finance');

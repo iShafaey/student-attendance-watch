@@ -32,12 +32,14 @@ class RunOnceCheckAbsence extends Command
         $absenceStudents = Student::whereNotIn('id', $studentAttendanceRecords)->get();
 
         foreach ($absenceStudents as $absenceStudent) {
-            StudentRecord::create([
-                'student_id' => $absenceStudent->id,
-                'absence_datetime' => Carbon::today(),
-                'status' => 'pending',
-                'phone_number' => $absenceStudent->country_code . $absenceStudent->phone_number,
-            ]);
+            if (attendanceRole($absenceStudent->class, strtolower(Carbon::today()->format('l')))){
+                StudentRecord::create([
+                    'student_id' => $absenceStudent->id,
+                    'absence_datetime' => Carbon::today(),
+                    'status' => 'pending',
+                    'phone_number' => $absenceStudent->country_code . $absenceStudent->phone_number,
+                ]);
+            }
         }
     }
 }

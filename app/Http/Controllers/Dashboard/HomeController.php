@@ -469,4 +469,9 @@ class HomeController extends Controller {
         Finance::find($request->id)->delete();
         return redirect()->back()->with('success', 'تم حذف المعاملة بنجاح');
     }
+
+    public function attendanceRole(Request $request) {
+        Cache::put('attendance_roles', $request->except('_token'));
+        return redirect()->back()->with('success', 'تحفظ البيانات بنجاح');
+    }
 }

@@ -112,6 +112,50 @@
                     </table>
                 </div>
             </div>
+            <div class="card mb-5">
+                <div class="card-header">
+                    <div class="float-end">
+                        <h5>قواعد الحضور والانصراف</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="attendance-rule" method="post" action="{{ route('attendance-rule.update') }}">
+                        @csrf
+                        <table class="table table-striped" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>الصف الدراسي</th>
+                                <th>السبت</th>
+                                <th>الأحد</th>
+                                <th>الاثنين</th>
+                                <th>الثلاثاء</th>
+                                <th>الاربعاء</th>
+                                <th>الخميس</th>
+                                <th>الجمعة</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($classes as $class)
+                                <tr>
+                                    <td>{{ $class->title }}</td>
+                                    <td><input {{ attendanceRole($class->id, "saturday") ? "checked" : "" }} name="saturday[]" value="{{ $class->id }}" type="checkbox" class="form-check-input" /></td>
+                                    <td><input {{ attendanceRole($class->id, "sunday") ? "checked" : "" }} name="sunday[]" value="{{ $class->id }}" type="checkbox" class="form-check-input" /></td>
+                                    <td><input {{ attendanceRole($class->id, "monday") ? "checked" : "" }} name="monday[]" value="{{ $class->id }}" type="checkbox" class="form-check-input" /></td>
+                                    <td><input {{ attendanceRole($class->id, "tuesday") ? "checked" : "" }} name="tuesday[]" value="{{ $class->id }}" type="checkbox" class="form-check-input" /></td>
+                                    <td><input {{ attendanceRole($class->id, "wednesday") ? "checked" : "" }} name="wednesday[]" value="{{ $class->id }}" type="checkbox" class="form-check-input" /></td>
+                                    <td><input {{ attendanceRole($class->id, "thursday") ? "checked" : "" }} name="thursday[]" value="{{ $class->id }}" type="checkbox" class="form-check-input" /></td>
+                                    <td><input {{ attendanceRole($class->id, "friday") ? "checked" : "" }} name="friday[]" value="{{ $class->id }}" type="checkbox" class="form-check-input" /></td>
+                                </tr>
+                            @empty
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <button type="button" onclick="$('#attendance-rule').submit();" class="btn btn-primary">حفظ البيانات</button>
+                </div>
+            </div>
         </div>
 
         <div class="modal fade" id="new-class" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -264,7 +308,12 @@
 @endsection
 
 @push('stylesheet')
-
+    <style>
+        table tr td:first-child {
+            background-color: #f0f8ff;
+            font-weight: bold;
+        }
+    </style>
 @endpush
 
 @push('script')
