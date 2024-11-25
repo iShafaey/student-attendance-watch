@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from barcode import Code128
 from barcode.writer import ImageWriter
+import qrcode
 
 def generate_barcodes():
     # Define the base directory of the project
@@ -42,16 +43,27 @@ def generate_barcodes():
                 print(f"Invalid student code: {student_code} (must be numeric). Skipping.")
                 continue
 
-            # Convert the student code to a string for barcode generation
+            # Convert the student code to a string for QR generation
             student_code_str = str(int(student_code))
 
-            # Generate the barcode using the student code
-            barcode = Code128(student_code_str, writer=ImageWriter())
-            barcode_filename = os.path.join(output_folder, f"{student_name}")  # Use student name as file name
+            # Generate the QR code using the student code
+            qr = qrcode.QRCode(
+                version=1,  # Size of the QR code
+                error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
+                box_size=10,  # Size of each box in the QR code
+                border=4,  # Width of the border
+            )
+            qr.add_data(student_code_str)  # Add the student code as data
+            qr.make(fit=True)
 
-            # Save the barcode image
-            barcode.save(barcode_filename)
-            print(f"Barcode generated for student: {student_name} (code: {student_code_str}) saved in {barcode_filename}")
+            # Generate the QR code image
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            # Save the QR code image
+            qr_filename = os.path.join(output_folder, f"{student_name}.png")  # Use student name as file name
+            img.save(qr_filename)
+
+            print(f"QR code generated for student: {student_name} (code: {student_code_str}) saved in {qr_filename}")
 
         except Exception as e:
             # Handle any error that occurs during barcode generation and saving

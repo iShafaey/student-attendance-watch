@@ -3,6 +3,7 @@ webdriver_manager
 requests
 pandas
 python-barcode
+qrcode[pil]
 Pillow
 unidecode
 colorama
