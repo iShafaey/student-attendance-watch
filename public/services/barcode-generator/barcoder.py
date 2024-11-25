@@ -48,7 +48,7 @@ def generate_barcodes():
 
             # Generate the QR code using the student code
             qr = qrcode.QRCode(
-                version=10,  # Size of the QR code
+                version=4,  # Size of the QR code
                 error_correction=qrcode.constants.ERROR_CORRECT_L,  # Error correction level
                 box_size=10,  # Size of each box in the QR code
                 border=4,  # Width of the border
