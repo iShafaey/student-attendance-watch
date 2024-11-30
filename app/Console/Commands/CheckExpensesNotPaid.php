@@ -28,17 +28,21 @@ class CheckExpensesNotPaid extends Command
      */
     public function handle()
     {
-        $studentAttendanceRecords = StudentRecord::whereNotNull('expenses_datetime')->whereMonth('created_at', Carbon::now()->month)->get()->pluck('student_id')->toArray();
-        $absenceStudents = Student::whereNotIn('id', $studentAttendanceRecords)->get();
+        $day = Carbon::now()->day;
+        if (in_array($day, [26, 27, 28])){
+            $studentAttendanceRecords = StudentRecord::whereNotNull('expenses_datetime')->whereMonth('created_at', Carbon::now()->month)->get()->pluck('student_id')->toArray();
+            $absenceStudents = Student::whereNotIn('id', $studentAttendanceRecords)->get();
 
-        foreach ($absenceStudents as $absenceStudent) {
-            StudentRecord::create([
-                'student_id' => $absenceStudent->id,
-                'expenses_reminder_datetime' => Carbon::today(),
-                'status' => 'pending',
-                'phone_number' => $absenceStudent->country_code . $absenceStudent->phone_number,
-                'expenses_value' => $absenceStudent->fees,
-            ]);
+            foreach ($absenceStudents as $absenceStudent) {
+                StudentRecord::create([
+                    'student_id' => $absenceStudent->id,
+                    'expenses_reminder_datetime' => Carbon::today(),
+                    'status' => 'pending',
+                    'phone_number' => $absenceStudent->country_code . $absenceStudent->phone_number,
+                    'expenses_value' => $absenceStudent->fees,
+                ]);
+            }
+            Log::info('Check expenses not paid started at ' . now());
         }
     }
 }
