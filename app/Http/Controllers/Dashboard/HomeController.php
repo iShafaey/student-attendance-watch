@@ -27,7 +27,11 @@ class HomeController extends Controller {
     }
 
     public function attendance() {
-        return view('dashboard.attendance.index');
+        $classes = StudentClass::get();
+
+        return view('dashboard.attendance.index', [
+            'classes' => $classes
+        ]);
     }
 
     public function settings() {
@@ -473,5 +477,24 @@ class HomeController extends Controller {
     public function attendanceRole(Request $request) {
         Cache::put('attendance_roles', $request->except('_token'));
         return redirect()->back()->with('success', 'تحفظ البيانات بنجاح');
+    }
+
+    public function attendanceAsGroup(Request $request) {
+        $students = Student::where('class', $request->class)->pluck('id')->toArray();
+
+        foreach ($students as $student) {
+            $studentRecord = StudentRecord::where('student_id', $student)
+                ->whereDate('attendance_in_datetime', Carbon::today())
+                ->whereNull('attendance_out_datetime');
+
+            if ($studentRecord->exists()) {
+                $studentRecord->update([
+                    'attendance_out_datetime' => Carbon::now(),
+                    'status' => 'pending'
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'تم انصراف المجموعة بنجاح!');
     }
 }
