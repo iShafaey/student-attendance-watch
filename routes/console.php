@@ -10,6 +10,6 @@ Schedule::command('run:check-expenses-not-paid')->monthly()->when(function () {
     return in_array($day, [26, 27, 28]);
 });
 
-//Schedule::call(function (){
-//    Log::info('php artisan schedule:work started at ' . now());
-//})->everyMinute();
+Schedule::call(function (){
+    Log::info('schedule started at ' . now());
+})->everyMinute();
