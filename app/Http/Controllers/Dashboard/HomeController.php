@@ -160,6 +160,10 @@ class HomeController extends Controller {
             ->editColumn('created_at', function ($value) {
                 return Carbon::parse($value?->created_at)->format('H:i Y-m-d');
             })
+            ->editColumn('month_name', function ($value) {
+                Carbon::setLocale('ar');
+                return Carbon::parse($value?->created_at)->monthName;
+            })
             ->editColumn('status', function ($value) {
                 if ($value->status == 'pending'):
                     return '<lable class="badge bg-warning">في الانتظار</lable>';
@@ -440,6 +444,9 @@ class HomeController extends Controller {
         return Datatables::of($data)
             ->editColumn('date', function ($value) {
                 return Carbon::parse($value?->date)->format('Y-m-d');
+            })
+            ->editColumn('month_name', function ($value) {
+                return Carbon::parse($value?->date)->translatedFormat('F');
             })
             ->rawColumns(['date'])
             ->make(true);

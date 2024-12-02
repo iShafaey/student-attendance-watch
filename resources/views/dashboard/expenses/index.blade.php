@@ -25,6 +25,7 @@
                             <th>قيمة المدفوعات</th>
                             <th>حالة الدفع</th>
                             <th>إعلام ولي الامر</th>
+                            <th>الشهر</th>
                             <th>تاريخ الاضافة</th>
                         </tr>
                         </thead>
@@ -114,6 +115,7 @@
                     {data: 'expenses_value', name: 'expenses_value'},
                     {data: 'paid_status', name: 'paid_status'},
                     {data: 'status', name: 'status'},
+                    {data: 'month_name', name: 'month_name'},
                     {data: 'created_at', name: 'created_at'},
 
                 ],

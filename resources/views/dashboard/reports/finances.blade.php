@@ -83,6 +83,7 @@
                                     <th>القيمة المدفوعة</th>
                                     <th>الفرق</th>
                                     <th>اليوم</th>
+                                    <th>الشهر</th>
                                     <th>التاريخ</th>
                                 </tr>
                                 </thead>
@@ -96,6 +97,7 @@
                                         <td>{{ $item?->expenses_value }}</td>
                                         <td>{{ $item?->student?->fees - $item?->expenses_value }}</td>
                                         <td>{{ $item?->expenses_datetime?->translatedFormat('l') }}</td>
+                                        <td>{{ $item?->expenses_datetime?->translatedFormat('F') }}</td>
                                         <td>{{ $item?->created_at?->format('Y-m-d') }}</td>
                                     </tr>
                                 @empty
@@ -117,6 +119,8 @@
                                     <th>نوع المعاملة</th>
                                     <th>القيمة</th>
                                     <th>مدفوع الي</th>
+                                    <th>اليوم</th>
+                                    <th>الشهر</th>
                                     <th>التاريخ</th>
                                 </tr>
                                 </thead>
@@ -126,6 +130,8 @@
                                             <td>{{ $finance->type }}</td>
                                             <td>{{ $finance->amount }}</td>
                                             <td>{{ $finance->creditor }}</td>
+                                            <td>{{ $finance->date->translatedFormat('l') }}</td>
+                                            <td>{{ $finance->date->translatedFormat('F') }}</td>
                                             <td>{{ $finance->date->format('Y-m-d') }}</td>
                                         </tr>
                                     @empty

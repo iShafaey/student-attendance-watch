@@ -157,6 +157,7 @@
                                     <th>القيمة المدفوعة</th>
                                     <th>الفرق</th>
                                     <th>اليوم</th>
+                                    <th>الشهر</th>
                                     <th>التاريخ</th>
                                 </tr>
                                 </thead>
@@ -167,6 +168,7 @@
                                         <td>{{ $item?->expenses_value }}</td>
                                         <td>{{ $item?->student?->fees - $item?->expenses_value }}</td>
                                         <td>{{ $item?->expenses_datetime?->translatedFormat('l') }}</td>
+                                        <td>{{ $item?->expenses_datetime?->translatedFormat('F') }}</td>
                                         <td>{{ $item?->created_at?->format('Y-m-d') }}</td>
                                     </tr>
                                 @empty

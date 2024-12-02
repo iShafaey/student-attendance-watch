@@ -22,6 +22,7 @@
                             <th>نوع المعاملة</th>
                             <th>القيمة</th>
                             <th>مدفوع الي</th>
+                            <th>الشهر</th>
                             <th>التاريخ</th>
                         </tr>
                         </thead>
@@ -115,6 +116,7 @@
                     {data: 'type', name: 'type'},
                     {data: 'amount', name: 'amount'},
                     {data: 'creditor', name: 'creditor'},
+                    {data: 'month_name', name: 'month_name'},
                     {data: 'date', name: 'date'},
 
                 ],
