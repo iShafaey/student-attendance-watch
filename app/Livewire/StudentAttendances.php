@@ -32,29 +32,33 @@ class StudentAttendances extends Component {
     public function scannerDetection($barcode) {
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
         try {
-            $student = Student::whereStudentCode($barcode)->firstOrFail();
-//            $student = Student::first();
-
-//            StudentAttendance::create([
-//                'student_id' => $student->id,
-//                'phone_number' => $student->country_code . $student->phone_number,
-//                'attendance_datetime' => Carbon::now()->toDateTimeString(),
-//            ]);
+//            $student = Student::whereStudentCode($barcode)->firstOrFail();
+            $student = Student::first();
 
             $studentRecord = StudentRecord::where('student_id', $student->id)
                 ->whereDate('attendance_in_datetime', Carbon::today())
-                ->whereNull('attendance_out_datetime');
+                ->whereNull('attendance_out_datetime')
+                ->first();
 
-            if ($studentRecord->exists()) {
-                $studentRecord->update([
-                    'attendance_out_datetime' => Carbon::now(),
-                    'status' => 'pending'
-                ]);
+            if ($studentRecord) {
+                // Check if the last attendance_in_datetime is within the last 15 minutes
+                $lastInTime = $studentRecord->attendance_in_datetime;
+                if ($lastInTime->diffInMinutes(Carbon::now()) < 15) {
+                    $this->alert('warning', "لا يمكن تسجيل الإنصراف خلال 15 دقيقة من تسجيل الحضور. الدقائق المتبقية: " . intval(15 - $lastInTime->diffInMinutes(Carbon::now())) . " دقيقة ", [
+                        'toast' => true,
+                        'timer' => 30000,
+                    ]);
+                } else {
+                    $studentRecord->update([
+                        'attendance_out_datetime' => Carbon::now(),
+                        'status' => 'pending',
+                    ]);
 
-                $this->alert('success', "تم إنصراف الطالب <span class='text-primary'>{$student->fullName()}</span> بنجاح", [
-                    'toast' => true,
-                    'timer' => 30000,
-                ]);
+                    $this->alert('success', "تم إنصراف الطالب <span class='text-primary'>{$student->fullName()}</span> بنجاح", [
+                        'toast' => true,
+                        'timer' => 30000,
+                    ]);
+                }
             } else {
                 StudentRecord::create([
                     'student_id' => $student->id,
