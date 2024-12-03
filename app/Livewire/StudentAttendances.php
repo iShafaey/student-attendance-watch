@@ -32,8 +32,8 @@ class StudentAttendances extends Component {
     public function scannerDetection($barcode) {
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
         try {
-//            $student = Student::whereStudentCode($barcode)->firstOrFail();
-            $student = Student::first();
+            $student = Student::whereStudentCode($barcode)->firstOrFail();
+//            $student = Student::first();
 
             $studentRecord = StudentRecord::where('student_id', $student->id)
                 ->whereDate('attendance_in_datetime', Carbon::today())
