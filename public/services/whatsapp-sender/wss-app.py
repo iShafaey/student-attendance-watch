@@ -258,7 +258,7 @@ def send_whatsapp_message(phone_number, message):
         driver.get(whatsapp_url)
 
         # Hide and resize the browser window
-        driver.set_window_position(10000, 10000)
+        driver.set_window_position(0, 0)
         driver.set_window_size(800, 800)
 
         if check_whatsapp_number(driver, phone_number, message) == False:
