@@ -538,7 +538,7 @@ class HomeController extends Controller {
                 'student_id' => $student->id,
                 'bulk_message' => $message,
                 'bulk_message_datetime' => Carbon::now(),
-                'phone_number' => $student->phone_number,
+                'phone_number' => $student->country_code . $student->phone_number,
             ]);
         }
 
