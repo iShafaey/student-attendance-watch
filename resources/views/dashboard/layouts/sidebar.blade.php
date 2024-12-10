@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-md-12 mt-3">
                             <label>نص الرسالة</label>
-                            <textarea name="message" id="" cols="30" rows="10" class="form-control w-100"></textarea>
+                            <input name="message" class="form-control w-100" />
                         </div>
                     </div>
                 </form>
