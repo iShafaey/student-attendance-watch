@@ -254,6 +254,7 @@ def send_whatsapp_message(phone_number, message):
     try:
         # Open the link with the phone number
         whatsapp_url = f"https://web.whatsapp.com/send?phone={phone_number}&text={message}"
+        print_plus(type="DEBUG", message=f"URL TARGET: {whatsapp_url}", message_color=Fore.BLUE)
         driver.get(whatsapp_url)
 
         # Hide and resize the browser window
