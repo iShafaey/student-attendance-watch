@@ -107,6 +107,10 @@
             $(this).select2({ dropdownParent: $(this).parent()});
         })
 
+        $('.select-plus-general').each(function() {
+            $(this).select2({ dropdownParent: $(this).parent()});
+        })
+
         $('.select-plus-tags').each(function() {
             const maxTags = $(this).data('tag-max') || 10;
 

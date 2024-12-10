@@ -34,14 +34,19 @@ class StudentAttendanceResource extends JsonResource
             $type = "absence";
         } elseif (!is_null($this->expenses_datetime)){
             $value = $this->expenses_value;
+            $month = Carbon::parse($this->expenses_datetime)->monthName;
             $template = option('expenses_message');
-            $message = str_replace(['{name}', '{value}'], [$name, $value], $template);
+            $message = str_replace(['{name}', '{value}', '{month}'], [$name, $value, $month], $template);
             $type = "expenses";
         } elseif (!is_null($this->expenses_reminder_datetime)){
             $value = $this->expenses_value;
             $template = option('expenses_reminder_message');
             $message = str_replace(['{name}', '{value}'], [$name, $value], $template);
             $type = "expenses_reminder";
+
+        } elseif (!is_null($this->bulk_message_datetime)){
+            $message = $this->bulk_message;
+            $type = "bulk_message";
         } else {
             $exam_results = $this->exam_result;
             $template = option('exam_message');

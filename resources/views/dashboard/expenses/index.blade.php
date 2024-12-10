@@ -57,6 +57,10 @@
                                 <label for="expenses_value" class="form-label">قيمة المدفوعات</label>
                                 <input name="expenses_value" id="expenses_value" class="form-control" type="number" step="0.01" />
                             </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">شهر الدفع</label>
+                                <input name="date" id="date" class="form-control" type="month" value="{{ date('m') }}"/>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">

@@ -46,6 +46,7 @@ class ApiController extends Controller {
             'absence' => 'absence_datetime',
             'expenses' => 'expenses_datetime',
             'expenses_reminder' => 'expenses_reminder_datetime',
+            'bulk_message' => 'bulk_message_datetime',
             'exam' => 'exam_result_datetime',
             default => null,
         };

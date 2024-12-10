@@ -162,7 +162,7 @@ class HomeController extends Controller {
             })
             ->editColumn('month_name', function ($value) {
                 Carbon::setLocale('ar');
-                return Carbon::parse($value?->created_at)->monthName;
+                return Carbon::parse($value?->expenses_datetime)->monthName;
             })
             ->editColumn('status', function ($value) {
                 if ($value->status == 'pending'):
@@ -376,11 +376,11 @@ class HomeController extends Controller {
         StudentRecord::create([
             'student_id' => $student_data->id,
             'phone_number' => $student_data->country_code . $student_data->phone_number,
-            'expenses_datetime' => Carbon::now(),
+            'expenses_datetime' => Carbon::parse($request->date),
             'expenses_value' => $request->expenses_value
         ]);
 
-        return redirect()->back()->with('success', 'تم حفظ المادة بنجاح');
+        return redirect()->back()->with('success', 'تم حفظ تسجيل المصاريف بنجاح');
     }
 
     public function deleteStudent(Request $request) {
@@ -503,5 +503,45 @@ class HomeController extends Controller {
         }
 
         return redirect()->back()->with('success', 'تم انصراف المجموعة بنجاح!');
+    }
+
+    public function bulkMessage(Request $request) {
+        if (!$request->filled('message') || !$request->filled('bulk')) {
+            return redirect()->back()->with('warning', 'يرجى ادخال بيانات منطقيه مثل اختيار على الاقل طالب او مجموعة وكتابه الرسالة');
+        }
+
+        $bulks = collect($request->bulk);
+        $message = $request->message;
+
+        $classes = $bulks->filter(function ($item) {
+            return str_starts_with($item, 'class:');
+        })->map(function ($item) {
+            return explode(':', $item)[1];
+        })->values()->toArray();
+
+        $students = $bulks->filter(function ($item) {
+            return str_starts_with($item, 'student:');
+        })->map(function ($item) {
+            return explode(':', $item)[1];
+        })->values()->toArray();
+
+        $studentIds = Student::whereIn('class', $classes)
+            ->pluck('id')
+            ->merge($students)
+            ->unique()
+            ->toArray();
+
+        $studentsList = Student::whereIn('id', $studentIds)->get();
+
+        foreach ($studentsList as $student) {
+            StudentRecord::create([
+                'student_id' => $student->id,
+                'bulk_message' => $message,
+                'bulk_message_datetime' => Carbon::now(),
+                'phone_number' => $student->phone_number,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'تم إرسال الرساله بنجاح الي الطلاب!');
     }
 }

@@ -17,6 +17,7 @@ class StudentRecord extends Model
         'expenses_datetime' => 'datetime',
         'expenses_reminder_datetime' => 'datetime',
         'exam_result_datetime' => 'datetime',
+        'bulk_message_datetime' => 'datetime',
     ];
 
     protected $fillable = [
@@ -30,7 +31,9 @@ class StudentRecord extends Model
         'attendance_in_datetime',
         'attendance_out_datetime',
         'absence_datetime',
-        'expenses_reminder_datetime'
+        'expenses_reminder_datetime',
+        'bulk_message_datetime',
+        'bulk_message'
     ];
 
 //    protected function attendanceDatetime(): Attribute
