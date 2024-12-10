@@ -279,6 +279,7 @@ def send_whatsapp_message(phone_number, message):
                 print_plus(type="DEBUG", message=f"Alternative method also failed: {type(secondary_error).__name__}", message_color=Fore.RED)
                 return False
 
+        driver.minimize_window()
         return True
 
     except Exception as e:
