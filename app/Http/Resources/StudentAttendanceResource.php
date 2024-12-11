@@ -48,9 +48,10 @@ class StudentAttendanceResource extends JsonResource
             $message = $this->bulk_message;
             $type = "bulk_message";
         } else {
+            $month = Carbon::parse($this->exam_result_datetime)->monthName;
             $exam_results = $this->exam_result;
             $template = option('exam_message');
-            $message = str_replace(['{name}', '{exam_results}'], [$name, $exam_results], $template);
+            $message = str_replace(['{name}', '{exam_results}', '{month}'], [$name, $exam_results, $month], $template);
             $type = "exam";
         }
 

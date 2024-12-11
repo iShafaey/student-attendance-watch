@@ -104,7 +104,7 @@
                                         <tr>
                                             <td>{{ $item?->attendance_in_datetime?->format('h:i A') }}</td>
                                             <td>{{ $item?->attendance_out_datetime?->format('h:i A') ?? "-" }}</td>
-                                            <td>{{ $item?->created_at?->translatedFormat('l') }}</td>
+                                            <td>{{ $item?->created_at?->dayName }}</td>
                                             <td>{{ $item?->created_at?->format('Y-m-d') }}</td>
                                         </tr>
                                     @empty
@@ -133,7 +133,7 @@
                                 @forelse($absenceRecords as $item)
                                     <tr>
                                         <td>{{ $item?->absence_datetime?->format('h:i A') }}</td>
-                                        <td>{{ $item?->absence_datetime?->translatedFormat('l') }}</td>
+                                        <td>{{ $item?->absence_datetime?->dayName }}</td>
                                         <td>{{ $item?->created_at?->format('Y-m-d') }}</td>
                                     </tr>
                                 @empty
@@ -167,8 +167,8 @@
                                         <td>{{ $item?->student?->fees }}</td>
                                         <td>{{ $item?->expenses_value }}</td>
                                         <td>{{ $item?->student?->fees - $item?->expenses_value }}</td>
-                                        <td>{{ $item?->expenses_datetime?->translatedFormat('l') }}</td>
-                                        <td>{{ $item?->expenses_datetime?->translatedFormat('F') }}</td>
+                                        <td>{{ $item?->expenses_datetime?->dayName }}</td>
+                                        <td>{{ $item?->expenses_datetime?->monthName }}</td>
                                         <td>{{ $item?->created_at?->format('Y-m-d') }}</td>
                                     </tr>
                                 @empty
@@ -190,6 +190,7 @@
                                 <tr>
                                     <th>النتائج</th>
                                     <th>اليوم</th>
+                                    <th>الشهر</th>
                                     <th>التاريخ</th>
                                 </tr>
                                 </thead>
@@ -202,6 +203,7 @@
                                             </div>
                                         </td>
                                         <td>{{ $item?->exam_result_datetime?->translatedFormat('l') }}</td>
+                                        <td>{{ $item?->exam_result_datetime?->monthName }}</td>
                                         <td>{{ $item?->created_at?->format('Y-m-d') }}</td>
                                     </tr>
                                 @empty

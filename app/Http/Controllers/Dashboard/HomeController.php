@@ -94,6 +94,9 @@ class HomeController extends Controller {
             ->editColumn('student_name', function ($value) {
                 return $value?->student?->fullName() ?? "[غير موجود]";
             })
+            ->addColumn('month_name', function ($value) {
+                return Carbon::parse($value?->exam_result_datetime)->monthName;
+            })
             ->editColumn('created_at', function ($value) {
                 return Carbon::parse($value?->created_at)->format('H:i Y-m-d');
             })
@@ -347,7 +350,7 @@ class HomeController extends Controller {
         ];
 
         $student_data = Student::find($request->student_id);
-        $exam_result_datetime = Carbon::now();
+        $exam_result_datetime = Carbon::parse($request->date);
         $exam_result = ConvertArrayToText($data);
 
         StudentRecord::create([

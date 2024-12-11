@@ -24,6 +24,7 @@
                             <th>اسم الطالب</th>
                             <th>المواد</th>
                             <th>إعلام ولي الامر</th>
+                            <th>الشهر</th>
                             <th>تاريخ الاضافة</th>
                         </tr>
                         </thead>
@@ -50,6 +51,10 @@
                                     @empty
                                     @endforelse
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">الشهر</label>
+                                <input name="date" id="date" class="form-control" type="month" value="{{ date('m') }}"/>
                             </div>
                             <div class="mb-3">
                                 <h5>المواد الدراسية</h5>
@@ -112,6 +117,7 @@
                     {data: 'student_name', name: 'student_name'},
                     {data: 'exam_result', name: 'exam_result'},
                     {data: 'status', name: 'status'},
+                    {data: 'month_name', name: 'month_name'},
                     {data: 'created_at', name: 'created_at'},
 
                 ],

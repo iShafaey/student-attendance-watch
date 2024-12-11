@@ -80,6 +80,14 @@ whitelist_file = "src/public/services/whatsapp-sender/whitelist.txt"
 blacklist_path = os.path.join(base_dir, blacklist_file)
 whitelist_path = os.path.join(base_dir, whitelist_file)
 
+def count_lines_in_file(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            line_count = sum(1 for line in file)
+        return line_count
+    except FileNotFoundError:
+        print_plus(type="CONFIG", message=f"file {file_path} not found!", message_color=Style.DIM + Fore.YELLOW)
+        return 0
 
 # Read blacklist file
 def load_blacklist(file_path):
@@ -286,6 +294,10 @@ def send_whatsapp_message(phone_number, message):
         print_plus(type="DEBUG", message=f"Failed to send message: {e}", message_color=Fore.RED)
         return False
 
+
+# Print system info
+print_plus(type="CONFIG", message=f"Blacklist found: {count_lines_in_file(blacklist_file)}", message_color=Style.DIM + Fore.BLUE)
+print_plus(type="CONFIG", message=f"Whitelist found: {count_lines_in_file(whitelist_file)}", message_color=Style.DIM + Fore.BLUE)
 
 # Infinite loop to query every 60 seconds
 while True:

@@ -22,14 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $students = Student::with('student_class:id,title')->get()->groupBy('student_class.title');
-        $classes = StudentClass::get();
+        try {
+            $students = Student::with('student_class:id,title')->get()->groupBy('student_class.title');
+            $classes = StudentClass::get();
+
+            view()->share([
+                '_students' => $students,
+                '_classes' => $classes,
+            ]);
+        } catch (\Throwable $th) {}
 
         Carbon::setLocale('ar');
-
-        view()->share([
-            '_students' => $students,
-            '_classes' => $classes,
-        ]);
     }
 }
