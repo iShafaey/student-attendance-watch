@@ -296,8 +296,8 @@ def send_whatsapp_message(phone_number, message):
 
 
 # Print system info
-print_plus(type="CONFIG", message=f"Blacklist found: {count_lines_in_file(blacklist_file)}", message_color=Style.DIM + Fore.CYAN)
-print_plus(type="CONFIG", message=f"Whitelist found: {count_lines_in_file(whitelist_file)}", message_color=Style.DIM + Fore.CYAN)
+print_plus(type="CONFIG", message=f"Blacklist found: {count_lines_in_file(blacklist_file)} numbers", message_color=Style.DIM + Fore.CYAN)
+print_plus(type="CONFIG", message=f"Whitelist found: {count_lines_in_file(whitelist_file)} numbers", message_color=Style.DIM + Fore.CYAN)
 
 # Infinite loop to query every 60 seconds
 while True:
