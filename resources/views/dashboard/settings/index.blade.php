@@ -27,7 +27,7 @@
                         </div>
                         <div class="form-group mb-4">
                             <label class="mb-2">رسالة تنبيه بأنه لم يتم دفع المصاريف:</label>
-                            <textarea class="form-control" name="expenses_reminder_message" rows="2">{{ option('expenses_reminder_message') }}</textarea>
+                            <textarea class="form-control" name="expenses_reminder_message" rows="1">{{ option('expenses_reminder_message') }}</textarea>
                         </div>
                         <div class="form-group mb-4">
                             <label class="mb-2">رساله دفع الطالب المصاريف:</label>
