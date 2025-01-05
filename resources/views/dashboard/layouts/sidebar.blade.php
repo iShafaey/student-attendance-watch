@@ -19,6 +19,9 @@
                 <button type="button" class="list-group-item list-group-item-action" data-bs-toggle="modal" data-bs-target="#bulkMessage">
                     إرسال رسائل جماعية
                 </button>
+                <button onclick="window.location = '{{ route('command.remove-old-recordes') }}';" type="button" class="list-group-item list-group-item-action text-danger">
+                    تفريخ السجلات (شهر) سابق
+                </button>
             </div>
         </div>
     </div>

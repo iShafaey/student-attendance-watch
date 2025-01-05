@@ -52,3 +52,4 @@ Route::get('/ajax/general-expenses', [HomeController::class, 'generalExpensesDat
 Route::post('/general-expenses/store', [HomeController::class, 'newGeneralExpenses'])->name('general-expenses.store');
 Route::post('/general-expenses/remove', [HomeController::class, 'removeGeneralExpenses'])->name('general-expenses.remove');
 Route::post('/ajax/messages/bulk', [HomeController::class, 'bulkMessage'])->name('send.bulk-message');
+Route::get('/command/remove-old-recordes', [HomeController::class, 'removeOldRecordes'])->name('command.remove-old-recordes');

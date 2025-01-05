@@ -28,7 +28,11 @@ class RemoveOldRecords extends Command
      */
     public function handle()
     {
-        StudentRecord::whereNotNull('attendance_in_datetime')->orWhereNotNull('absence_datetime')->where('created_at', '<=', Carbon::now()->subMonths(1))->delete();
+        StudentRecord::where(function ($query) {
+            $query->whereNotNull('attendance_in_datetime')
+                ->orWhereNotNull('absence_datetime');
+        })->where('created_at', '<=', Carbon::now()->subMonths(1))->delete();
+
         Log::info("Student records have been removed");
     }
 }

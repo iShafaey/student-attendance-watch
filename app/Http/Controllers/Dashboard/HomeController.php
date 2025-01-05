@@ -11,6 +11,7 @@ use App\Models\StudentSubject;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -546,5 +547,10 @@ class HomeController extends Controller {
         }
 
         return redirect()->back()->with('success', 'تم إرسال الرساله بنجاح الي الطلاب!');
+    }
+
+    public function removeOldRecordes() {
+        Artisan::call('run:remove-old-records');
+        return redirect()->back()->with('success', 'تم تفريغ السجلات بنجاح');
     }
 }
