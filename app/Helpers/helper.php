@@ -43,6 +43,10 @@ function replacePrefixZero($phoneNumber) {
 }
 
 function attendanceRole($class_id, $day_name) {
-    $attendance_roles = Cache::get('attendance_roles', []);
-    return $attendance_roles ? in_array($class_id, $attendance_roles[$day_name]) : false;
+    try {
+        $attendance_roles = Cache::get('attendance_roles', []);
+        return $attendance_roles ? in_array($class_id, $attendance_roles[$day_name]) : false;
+    } catch (\Throwable $th) {
+        return false;
+    }
 }
