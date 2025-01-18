@@ -79,8 +79,7 @@
             },
             onError: function (string, qty) {
                 console.log(string);
-                Livewire.dispatch('scannerDetection', {string});
-                // Livewire.emit('scannerDetection', string);
+                Livewire.emit('scannerDetection', string);
             }
         });
 
