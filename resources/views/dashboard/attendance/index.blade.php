@@ -75,11 +75,11 @@
             onComplete: function (barcode, qty) {
                 validScan = true;
                 console.log(barcode);
-                Livewire.dispatch('scannerDetection', {barcode});
+                Livewire.dispatch('scannerDetection', { barcode: barcode });
             },
             onError: function (string, qty) {
                 console.log(string);
-                Livewire.dispatch('scannerDetection', {string});
+                Livewire.dispatch('scannerDetection', { barcode: string });
             }
         });
 
