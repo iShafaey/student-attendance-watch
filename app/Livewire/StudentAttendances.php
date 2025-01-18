@@ -31,6 +31,7 @@ class StudentAttendances extends Component {
 
     public function scannerDetection($barcode) {
         $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $barcode);
+        dd($barcode);
         try {
             $student = Student::whereStudentCode($barcode)->firstOrFail();
 //            $student = Student::first();
