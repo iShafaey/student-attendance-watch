@@ -12,7 +12,10 @@
                         </div>
                         سجل الحضور
                     </h5>
-                    <button class="btn btn-success float-start" data-bs-toggle="modal" data-bs-target="#AttendAsGroup">انصراف مجموعه</button>
+                    <div class="btn-group float-start" role="group" aria-label="Basic example" dir="ltr">
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#AttendAsGroup">انصراف مجموعه</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AttendViaCode">حضور / انصراف بالكود</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <livewire:student-attendances />
@@ -48,6 +51,33 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" id="AttendViaCode" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5 float-end" id="staticBackdropLabel">حضور / انصراف الطالب بالكود</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="attendCode" action="{{ route('students.attendance.via-code') }}" method="post">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="class" class="mb-1">اكتب كود الطالب</label>
+                                                    <input name="code" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" onclick="$('#attendCode').submit();">تنفيذ الامر</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,6 +97,10 @@
         //     }
         // });
 
+        function isScannerInput(input) {
+            return input.length >= 4;
+        }
+
         $(document).scannerDetection({
             timeBeforeScanTest: 200, // wait for the next character for upto 200ms
             avgTimeByChar: 40, // it's not a barcode if a character takes longer than 100ms
@@ -74,12 +108,14 @@
             endChar: [13],
             onComplete: function (barcode, qty) {
                 validScan = true;
-                console.log(barcode);
+                console.log("onComplete: " + barcode);
                 Livewire.dispatch('scannerDetection', { barcode: barcode });
             },
             onError: function (string, qty) {
-                console.log(string);
-                Livewire.dispatch('scannerDetection', { barcode: string });
+                console.log("onError: " + string);
+                if (isScannerInput(string)) {
+                    Livewire.dispatch('scannerDetection', {barcode: string});
+                }
             }
         });
 

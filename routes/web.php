@@ -19,6 +19,7 @@ Route::get('/settings', [HomeController::class, 'settings'])->name('settings.ind
 Route::post('/settings/update', [HomeController::class, 'updateSettings'])->name('settings.update');
 Route::get('/students/attendance', [HomeController::class, 'attendance'])->name('students.attendance');
 Route::post('/students/attendance/as-group', [HomeController::class, 'attendanceAsGroup'])->name('students.attendance.as-group');
+Route::post('/students/attendance/via-code', [HomeController::class, 'attendanceViaCode'])->name('students.attendance.via-code');
 Route::get('/students/exam-results', [HomeController::class, 'examResults'])->name('students.exam-results');
 Route::get('/students/expenses', [HomeController::class, 'expenses'])->name('students.expenses');
 Route::post('/students/new', [HomeController::class, 'newStudent'])->name('new.student');

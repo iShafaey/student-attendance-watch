@@ -389,7 +389,9 @@ class HomeController extends Controller {
 
     public function deleteStudent(Request $request) {
         Student::find($request->id)->delete();
-        return redirect()->back()->with('success', 'تم حذف الطالب بنجاح');
+        StudentRecord::where('student_id', $request->id)->delete();
+
+        return redirect()->back()->with('success', 'تم حذف الطالب بالكامل من سجلات البرنامج بنجاح');
     }
 
     public function studentsBlacklist() {
@@ -507,6 +509,48 @@ class HomeController extends Controller {
         }
 
         return redirect()->back()->with('success', 'تم انصراف المجموعة بنجاح!');
+    }
+
+    public function attendanceViaCode(Request $request) {
+        $barcode = preg_replace('/[^\p{L}\p{N}\s]/u', '', $request->code);
+
+        $student = Student::where('student_code', $barcode)->firstOrFail();
+
+
+        try {
+            $student = Student::whereStudentCode($barcode)->firstOrFail();
+
+            $studentRecord = StudentRecord::where('student_id', $student->id)
+                ->whereDate('attendance_in_datetime', Carbon::today())
+                ->whereNull('attendance_out_datetime')
+                ->first();
+
+            if ($studentRecord) {
+                // Check if the last attendance_in_datetime is within the last 15 minutes
+                $lastInTime = $studentRecord->attendance_in_datetime;
+                if ($lastInTime->diffInMinutes(Carbon::now()) < 15) {
+                    return redirect()->back()->with('warning', "لا يمكن تسجيل الإنصراف خلال 15 دقيقة من تسجيل الحضور. الدقائق المتبقية: " . intval(15 - $lastInTime->diffInMinutes(Carbon::now())) . " دقيقة ");
+                } else {
+                    $studentRecord->update([
+                        'attendance_out_datetime' => Carbon::now(),
+                        'status' => 'pending',
+                    ]);
+
+                    return redirect()->back()->with('success', "تم إنصراف الطالب <span class='text-primary'>{$student->fullName()}</span> بنجاح");
+                }
+            } else {
+                StudentRecord::create([
+                    'student_id' => $student->id,
+                    'attendance_in_datetime' => Carbon::now(),
+                    'phone_number' => $student->country_code . $student->phone_number,
+                ]);
+
+                return redirect()->back()->with('success', "تم حضور الطالب <span class='text-primary'>{$student->fullName()}</span> بنجاح");
+            }
+
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('warning', 'لم يتم التعرف على الطالب');
+        }
     }
 
     public function bulkMessage(Request $request) {
